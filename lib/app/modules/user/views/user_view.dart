@@ -17,26 +17,6 @@ class UserView extends GetView<UserController> {
     );
   }
 
-  // Widget buildStream(context) {
-  //   return StreamBuilder(
-  //       stream: FirebaseAuth.instance.authStateChanges(),
-  //       builder: (context, snapshot) {
-  //         if (snapshot.connectionState == ConnectionState.waiting) {
-  //           return const Center(child: CircularProgressIndicator());
-  //         } else if (snapshot.hasData) {
-  //           return LoggedInWidget(context);
-  //         } else if (snapshot.hasData) {
-  //           return const Center(child: Text('Erro!'));
-  //         } else {
-  //           return SignUpWidget();
-  //         }
-  //       });
-  // }
-
-  // Widget SignUpWidget() {
-  //   return Text('Default');
-  // }
-
   Widget loggedInWidget(BuildContext context) {
     final user = loginController.userFirebase[0];
     final logged = loginController.userLogged;
@@ -52,10 +32,11 @@ class UserView extends GetView<UserController> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   CircleAvatar(
-                      radius: 40, backgroundImage: NetworkImage(user.photoURL)),
+                      radius: 40,
+                      backgroundImage: NetworkImage('${user.photoURL}')),
                   const SizedBox(height: 32),
-                  Text(user.displayName, style: TextStyle(fontSize: 20)),
-                  Text(user.email),
+                  Text('${user.displayName}', style: TextStyle(fontSize: 20)),
+                  Text('${user.email}'),
                   Text('emailVerified: ${user.emailVerified.toString()}'),
                   Text(user.uid),
                   const SizedBox(height: 32),
