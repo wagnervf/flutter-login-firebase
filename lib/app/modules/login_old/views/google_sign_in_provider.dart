@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_loggin_firebase/app/modules/login/controllers/login_controller.dart';
-import 'package:flutter_loggin_firebase/app/modules/user/views/user_view.dart';
+import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import 'package:flutter_loggin_firebase/app/modules/login_old/controllers/login_controller.dart';
 
 class GoogleSignInProvider extends StatelessWidget {
   final loginController = Get.put(LoginController());
@@ -18,14 +18,19 @@ class GoogleSignInProvider extends StatelessWidget {
       'https://www.googleapis.com/auth/contacts.readonly',
     ],
   );
-  GoogleSignInAccount? _currentUserGoogle;
+  // ignore: unused_field
+  GoogleSignInAccount? currentUserGoogle;
+  GoogleSignInProvider({
+    Key? key,
+    this.currentUserGoogle,
+  }) : super(key: key);
 
   Future<void> _loginGoogle(BuildContext context) async {
     try {
       // googleSignIn!.signInSilently();
       final googleUser = await googleSignIn.signIn();
       if (googleUser == null) return;
-      _currentUserGoogle = googleUser;
+      currentUserGoogle = googleUser;
 
       final googleAuth = await googleUser.authentication;
 
@@ -38,7 +43,7 @@ class GoogleSignInProvider extends StatelessWidget {
 
       // Get.to(() => UserView());
     } catch (error) {
-      print(error);
+      //print(error);
       showMessage(context, 'Não foi possível realizar o login');
     }
   }

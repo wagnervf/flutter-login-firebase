@@ -1,37 +1,29 @@
 import 'dart:convert';
 
 class UserModel {
-  final String uid;
-  final String displayName;
-  final String email;
-  final bool emailVerified;
-  final String photoURL;
+  late String? id;
+  late String? name;
+  late String? email;
 
   UserModel({
-    required this.uid,
-    required this.displayName,
-    required this.email,
-    required this.emailVerified,
-    required this.photoURL,
+    this.id,
+    this.name,
+    this.email,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'uid': uid,
-      'displayName': displayName,
+      'id': id,
+      'name': name,
       'email': email,
-      'emailVerified': emailVerified,
-      'photoURL': photoURL,
     };
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      uid: map['uid'],
-      displayName: map['displayName'],
+      id: map['id'],
+      name: map['name'],
       email: map['email'],
-      emailVerified: map['emailVerified'],
-      photoURL: map['photoURL'],
     );
   }
 

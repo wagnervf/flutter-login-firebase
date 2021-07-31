@@ -1,74 +1,61 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_loggin_firebase/app/modules/login/views/form_view.dart';
-import 'package:flutter_loggin_firebase/app/modules/user/views/user_view.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_loggin_firebase/app/components/nao_possui_conta.dart';
+import 'package:flutter_loggin_firebase/app/shared/size_config.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import '../controllers/login_controller.dart';
-import 'google_sign_in_provider.dart';
+import 'form_login_view.dart';
 
+// ignore: use_key_in_widget_constructors
 class LoginView extends GetView<LoginController> {
-  final loginController = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('LoginView'),
-        centerTitle: true,
-      ),
-      body: _buildBody(),
+      //appBar: AppBar(),
+      body: SingleChildScrollView(child: buildBody(context)),
     );
   }
 
-  Widget _buildBody() {
-    return Obx(
-      () => Visibility(
-        visible: !loginController.userLogged,
-        child: signUpWidget(),
-        replacement: buidLogged(),
-      ),
-    );
-  }
+  Widget buildBody(BuildContext context) {
+    //  var size = MediaQuery.of(context).size;
+    final loginController = Get.put(LoginController());
+    final logged = loginController.userLogged;
 
-  Container buidLogged() {
-    return Container(
-      alignment: Alignment.center,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Obx(() => Text('${loginController.userFirebase[0].uid}')),
-          TextButton(
-            onPressed: () => Get.to(() => UserView()),
-            child: const Text('Profile'),
-          ),
-          TextButton(
-            onPressed: () => loginController.setLogoutAll(),
-            child: const Text('Logout'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget signUpWidget() {
-    return ListView(
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return SafeArea(
+      child: Container(
+        width: double.infinity,
+        margin: EdgeInsets.zero,
+        padding: const EdgeInsets.symmetric(horizontal: 25),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 32),
-            const Text("Você não está conectado"),
-            const SizedBox(height: 32),
-            TextButton(
-              onPressed: () => Get.to(() => FormView()),
-              child: const Text('Criar Conta'),
-            ),
-            const SizedBox(height: 32),
-            GoogleSignInProvider(),
+            logged
+                ? Text(loginController.userFirebase[0].email!)
+                : Text('Não Logado'),
+            const FlutterLogo(size: 150),
+            SizedBox(height: getHeight(context) * 0.03),
+            const FormLoginView(),
+            SizedBox(height: getHeight(context) * 0.04),
+            buildNaoPossuiConta(possuiConta: true),
+            SizedBox(height: getHeight(context) * 0.02),
           ],
         ),
-      ],
+      ),
+    );
+  }
+
+  TextStyle buildTextStyle() {
+    return const TextStyle(
+      color: Colors.black,
+      fontSize: 18.0,
+      fontWeight: FontWeight.normal,
+    );
+  }
+
+  TextStyle buildTextLogin() {
+    return const TextStyle(
+      color: Colors.black,
+      fontSize: 28.0,
+      fontWeight: FontWeight.bold,
     );
   }
 }

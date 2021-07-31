@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_loggin_firebase/app/modules/components/messages_snackbar.dart';
+import 'package:flutter_loggin_firebase/app/services/handle_erros.dart';
+import 'package:flutter_loggin_firebase/app/services/messages_snackbar.dart';
+
 import 'package:flutter_loggin_firebase/app/modules/login/views/login_view.dart';
 import 'package:flutter_loggin_firebase/app/modules/user/views/user_view.dart';
 import 'package:get/get.dart';
@@ -13,17 +13,17 @@ class LoginController extends GetxController {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   GoogleSignIn googleSignIn = GoogleSignIn();
-  Map<String, dynamic> userData = Map();
+  Map<String, dynamic> userData = {};
 
   final _userFirebase = <User>[].obs;
   final _logged = false.obs;
   final _loading = false.obs;
 
   //late User userCreatedFirebase;
-  //final userCreatedFirebase = <User>[].obs;
-  //RxList<User> get userFirestore => userCreatedFirebase;
+  //Rx<User> _userCreatedFirebase;
+  //get userFirestore => _userCreatedFirebase;
 
-  RxList<User> get userFirebase => _userFirebase;
+  List<User> get userFirebase => _userFirebase;
   bool get userLogged => _logged.value;
   bool get loading => _loading.value;
 
@@ -58,20 +58,48 @@ class LoginController extends GetxController {
         password: password,
       );
 
+      setLogged(true);
       setUserFirebase(userCredential.user!);
       await _saveUserInFirebase(userData);
-      setLogged(true);
+
       setLoading(false);
       //
     } on FirebaseAuthException catch (e) {
-      getErroCreateUserFireabse(e);
+      HandleErros.getErroCreateUserFireabse(e);
       setLoading(false);
       setLogged(false);
       //
     } catch (e) {
       setLoading(false);
       setLogged(false);
-      print(e);
+      //
+    }
+  }
+
+  //
+  //Login Firebase
+  //
+  loginInFirebase({required String email, required String password}) async {
+    try {
+      setLoading(true);
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      setLogged(true);
+      setUserFirebase(result.user!);
+      setLoading(false);
+
+      //
+    } on FirebaseAuthException catch (error) {
+      setLoading(false);
+      setLogged(false);
+      return HandleErros.getErroLoginFireabse(error);
+    } catch (e) {
+      setLoading(false);
+      setLogged(false);
+      print('catch: ${e}');
       //
     }
   }
@@ -79,14 +107,6 @@ class LoginController extends GetxController {
   Future _saveUserInFirebase(Map<String, dynamic> userData) async {
     this.userData = userData;
     await firestore.collection("users").doc(_userFirebase[0].uid).set(userData);
-  }
-
-  getErroCreateUserFireabse(FirebaseAuthException error) {
-    if (error.code == 'weak-password') {
-      MessagesSnackbar.show('A senha fornecida é muito fraca.');
-    } else if (error.code == 'email-already-in-use') {
-      MessagesSnackbar.show('Este email já está em uso em outra conta');
-    }
   }
 
   void setLoading(bool val) {
@@ -108,8 +128,8 @@ class LoginController extends GetxController {
     FirebaseAuth.instance.signOut();
     clearUser();
     setLogged(false);
-    userData = Map();
-    Get.to(() => LoginView());
+    userData = {};
+    //Get.to(() => LoginView());
   }
 
   void clearUser() {
