@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_loggin_firebase/app/components/nao_possui_conta.dart';
 import 'package:flutter_loggin_firebase/app/shared/size_config.dart';
+import 'package:flutter_loggin_firebase/app/theme.dart';
 import 'package:get/get.dart';
 import '../controllers/login_controller.dart';
 import 'form_login_view.dart';
@@ -31,10 +32,14 @@ class LoginView extends GetView<LoginController> {
             logged
                 ? Text(loginController.userFirebase[0].email!)
                 : Text('Não Logado'),
-            const FlutterLogo(size: 150),
+            const FlutterLogo(size: 130),
+            builBemVindo(
+              'Seja Bem Vindo!',
+              'Acesse com sua conta ou crie uma nova',
+            ),
             SizedBox(height: getHeight(context) * 0.03),
             const FormLoginView(),
-            SizedBox(height: getHeight(context) * 0.04),
+            SizedBox(height: getHeight(context) * 0.02),
             buildNaoPossuiConta(possuiConta: true),
             SizedBox(height: getHeight(context) * 0.02),
           ],

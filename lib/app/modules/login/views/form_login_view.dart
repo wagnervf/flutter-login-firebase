@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_loggin_firebase/app/components/default_button.dart';
 import 'package:flutter_loggin_firebase/app/modules/login/controllers/login_controller.dart';
 import 'package:flutter_loggin_firebase/app/shared/size_config.dart';
 import 'package:flutter_loggin_firebase/app/theme.dart';
@@ -7,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:validatorless/validatorless.dart';
 
 import 'forgot_password_view.dart';
+import 'package:flutter_loggin_firebase/app/theme.dart';
 
 class FormLoginView extends StatefulWidget {
   const FormLoginView({Key? key}) : super(key: key);
@@ -39,18 +39,18 @@ class _FormLoginViewState extends State<FormLoginView> {
         children: [
           SizedBox(height: getHeight(context) * .03),
           buildTextFormFieldEmail(),
-          SizedBox(height: getHeight(context) * .03),
-          buildTextFormFieldSenha(),
           SizedBox(height: getHeight(context) * .02),
-          buildRemember(),
-          SizedBox(height: getHeight(context) * .05),
-          buttonCadastrar(context),
+          buildTextFormFieldSenha(),
+          SizedBox(height: getHeight(context) * .01),
+          esqueceuSenha(),
+          SizedBox(height: getHeight(context) * .02),
+          buttonAcessar(context),
         ],
       ),
     );
   }
 
-  SizedBox buttonCadastrar(BuildContext context) {
+  SizedBox buttonAcessar(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       height: getHeight(context) * .07,
@@ -66,24 +66,10 @@ class _FormLoginViewState extends State<FormLoginView> {
                     color: Colors.white,
                   ),
                 ),
-          style: ElevatedButton.styleFrom(
-            primary: kPrimaryColor,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          ),
+          style: styleElevatedButton(),
         ),
       ),
     );
-  }
-
-  Center builLoading() {
-    return Center(
-        child: Container(
-      margin: EdgeInsets.all(8.0),
-      child: CircularProgressIndicator(
-        color: Colors.white,
-      ),
-    ));
   }
 
   _submit(_formKey) {
@@ -98,17 +84,24 @@ class _FormLoginViewState extends State<FormLoginView> {
 
   TextFormField buildTextFormFieldEmail() {
     return TextFormField(
-        decoration: defaultInputDecoration(
-          "E-mail",
-          "Digite seu e-mail",
-          Icons.email_outlined,
-        ),
-        keyboardType: TextInputType.emailAddress,
-        controller: _email,
-        validator: Validatorless.multiple([
+      decoration: defaultInputDecoration(
+        "E-mail",
+        "Digite seu e-mail",
+        Icons.email_outlined,
+      ),
+      style: const TextStyle(
+        fontSize: 18,
+        decoration: TextDecoration.none,
+      ),
+      keyboardType: TextInputType.emailAddress,
+      controller: _email,
+      validator: Validatorless.multiple(
+        [
           Validatorless.required('E-mail é obrigatório'),
           Validatorless.email('Email é inválido'),
-        ]));
+        ],
+      ),
+    );
   }
 
   TextFormField buildTextFormFieldSenha() {
@@ -126,25 +119,19 @@ class _FormLoginViewState extends State<FormLoginView> {
         ]));
   }
 
-  Row buildRemember() {
+  Row esqueceuSenha() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Checkbox(
-          value: remember,
-          activeColor: kPrimaryColor,
-          onChanged: (value) {
-            setState(() {
-              remember = value!;
-            });
-          },
+        const Text(
+          'Esqueceu a senha? ',
+          style: TextStyle(fontSize: 16.0),
         ),
-        const Text("Lembrar-me"),
-        const Spacer(),
-        GestureDetector(
-          onTap: () => Get.to(() => ForgotPasswordView()),
-          child: const Text(
-            'esqueci a senha',
-            style: TextStyle(decoration: TextDecoration.underline),
+        TextButton(
+          onPressed: () => Get.to(() => ForgotPasswordView()),
+          child: Text(
+            'clique aqui',
+            style: stylelLink2(),
           ),
         ),
       ],

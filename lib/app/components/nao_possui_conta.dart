@@ -17,37 +17,31 @@ Widget buildNaoPossuiConta({required bool possuiConta}) {
                 ),
                 TextButton(
                   onPressed: () => Get.to(() => const FormCadastroView()),
-                  child: const Text(
+                  child: Text(
                     'Clique aqui',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      color: kPrimaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: stylelLink(),
                   ),
                 ),
               ],
             )
           : Container(),
-      const SizedBox(height: 8.0),
+      const SizedBox(height: 6.0),
       const Text('ou acesse com', textAlign: TextAlign.center),
-      const SizedBox(height: 8.0),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SocialCard(
-            icon: "assets/icons/google-icon.svg",
-            press: () {},
-          ),
-          SocialCard(
-            icon: "assets/icons/facebook-2.svg",
-            press: () {},
-          ),
-          SocialCard(
-            icon: "assets/icons/twitter.svg",
-            press: () {},
-          ),
-        ],
+      const SizedBox(height: 6.0),
+      Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SocialCard(
+              icon: "assets/icons/google-icon.svg",
+              press: () {},
+            ),
+            SocialCard(
+              icon: "assets/icons/facebook-2.svg",
+              press: () {},
+            ),
+          ],
+        ),
       ),
     ],
   );

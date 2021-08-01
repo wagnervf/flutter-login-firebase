@@ -22,7 +22,7 @@ AppBarTheme appBarTheme() {
   );
 }
 
-const kPrimaryColor = Color(0xFFFF7643);
+const kPrimaryColor = Color(0xFF049FFF);
 const kPrimaryLightColor = Color(0xFFFFECDF);
 const kPrimaryGradientColor = LinearGradient(
   begin: Alignment.topLeft,
@@ -40,6 +40,12 @@ const headingStyle = TextStyle(
   color: Colors.black,
   height: 1.5,
 );
+TextTheme textTheme() {
+  return const TextTheme(
+    bodyText1: TextStyle(color: kTextColor),
+    bodyText2: TextStyle(color: kTextColor),
+  );
+}
 
 const defaultDuration = Duration(milliseconds: 250);
 
@@ -48,12 +54,18 @@ const headerStyle =
 
 InputDecorationTheme inputDecorationTheme() {
   return InputDecorationTheme(
-    floatingLabelBehavior: FloatingLabelBehavior.always,
-    contentPadding:
-        const EdgeInsets.symmetric(horizontal: 40.0, vertical: 15.0),
-    enabledBorder: buildOutlineInputBorder(),
-    focusedBorder: buildOutlineInputBorder(),
-    border: buildOutlineInputBorder(),
+      floatingLabelBehavior: FloatingLabelBehavior.always,
+      contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
+      enabledBorder: inputBorder(),
+      focusedBorder: inputBorder(),
+      border: inputBorder(),
+      labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+      isDense: false);
+}
+
+UnderlineInputBorder inputBorder() {
+  return const UnderlineInputBorder(
+    borderSide: BorderSide(color: kTextColor),
   );
 }
 
@@ -62,13 +74,6 @@ OutlineInputBorder buildOutlineInputBorder() {
     borderRadius: BorderRadius.circular(28),
     borderSide: const BorderSide(color: kTextColor),
     gapPadding: 10,
-  );
-}
-
-TextTheme textTheme() {
-  return const TextTheme(
-    bodyText1: TextStyle(color: kTextColor),
-    bodyText2: TextStyle(color: kTextColor),
   );
 }
 
@@ -91,7 +96,83 @@ InputDecoration defaultInputDecoration(
   return InputDecoration(
     labelText: label,
     hintText: hint,
+    labelStyle: const TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 22,
+      height: 1.0,
+    ),
+    //contentPadding: const EdgeInsets.only(top: 80),
+
     suffixIcon: Icon(icon),
     hintStyle: const TextStyle(color: Colors.grey),
+  );
+}
+
+TextStyle stylelLink() {
+  return TextStyle(
+    fontSize: 18.0,
+    color: kPrimaryColor,
+    fontWeight: FontWeight.bold,
+  );
+}
+
+TextStyle stylelLink2() {
+  return TextStyle(
+    fontSize: 16.0,
+    color: kPrimaryColor,
+    fontWeight: FontWeight.normal,
+  );
+}
+
+const titleStyle = TextStyle(
+  fontSize: 26.0,
+  fontWeight: FontWeight.bold,
+  color: Colors.black,
+  height: 1.5,
+);
+
+const subTitleLightStyle = TextStyle(
+  fontSize: 14.0,
+  fontWeight: FontWeight.normal,
+  color: Colors.grey,
+  height: 1.5,
+);
+
+ButtonStyle styleElevatedButton() {
+  return ElevatedButton.styleFrom(
+    primary: kPrimaryColor,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20),
+    ),
+  );
+}
+
+Center builLoading() {
+  return Center(
+      child: Container(
+    margin: const EdgeInsets.all(8.0),
+    child: const CircularProgressIndicator(
+      color: Colors.white,
+    ),
+  ));
+}
+
+Container builBemVindo(String title, String subtitle) {
+  return Container(
+    width: double.infinity,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: titleStyle,
+        ),
+        Text(
+          subtitle,
+          style: subTitleLightStyle,
+        ),
+      ],
+    ),
   );
 }

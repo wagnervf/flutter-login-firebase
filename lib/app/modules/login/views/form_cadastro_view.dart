@@ -53,11 +53,15 @@ class _FormCadastroViewState extends State<FormCadastroView> {
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-                const Text('Cadastrar uma conta', style: headerStyle),
-                SizedBox(height: getHeight(context) * .03),
-                const Text(
+                // const Text('Cadastrar uma conta', style: headerStyle),
+                // SizedBox(height: getHeight(context) * .03),
+                // const Text(
+                //   'Por favor, informe seu dados \npara o cadastro da conta.',
+                //   textAlign: TextAlign.center,
+                // ),
+                builBemVindo(
+                  'Cadastrar uma conta',
                   'Por favor, informe seu dados \npara o cadastro da conta.',
-                  textAlign: TextAlign.center,
                 ),
                 SizedBox(height: getHeight(context) * .05),
                 buildTextFormFieldNome(),
@@ -85,22 +89,17 @@ class _FormCadastroViewState extends State<FormCadastroView> {
       width: double.infinity,
       height: getHeight(context) * .07,
       child: ElevatedButton(
-        onPressed: () => _submit(_formKey),
-        child: loginController.loading
-            ? const Center(child: CircularProgressIndicator())
-            : Text(
-                'Cadastrar',
-                style: TextStyle(
-                  fontSize: getHeight(context) * .03,
-                  color: Colors.white,
+          onPressed: () => _submit(_formKey),
+          child: loginController.loading
+              ? builLoading()
+              : Text(
+                  'Cadastrar',
+                  style: TextStyle(
+                    fontSize: getHeight(context) * .03,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-        style: ElevatedButton.styleFrom(
-          primary: kPrimaryColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        ),
-      ),
+          style: styleElevatedButton()),
     );
   }
 
