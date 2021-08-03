@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_loggin_firebase/app/components/nao_possui_conta.dart';
 import 'package:flutter_loggin_firebase/app/modules/login/controllers/login_controller.dart';
+import 'package:flutter_loggin_firebase/app/modules/login/views/login_componentes.dart';
 import 'package:flutter_loggin_firebase/app/services/validators_custom.dart';
 import 'package:flutter_loggin_firebase/app/shared/size_config.dart';
 import 'package:flutter_loggin_firebase/app/theme.dart';
@@ -23,6 +23,16 @@ class _FormCadastroViewState extends State<FormCadastroView> {
   final _password = TextEditingController();
   final _confirmaPassword = TextEditingController();
 
+  bool _passwordVisible = true;
+  bool _conformPasswordVisible = true;
+
+  @override
+  void initState() {
+    _passwordVisible = false;
+    _conformPasswordVisible = false;
+    super.initState();
+  }
+
   @override
   void dispose() {
     _nome.dispose();
@@ -39,11 +49,11 @@ class _FormCadastroViewState extends State<FormCadastroView> {
         title: const Text('Cadastro'),
         centerTitle: true,
       ),
-      body: _body(context),
+      body: SingleChildScrollView(child: buildBody(context)),
     );
   }
 
-  SizedBox _body(BuildContext context) {
+  SizedBox buildBody(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: SingleChildScrollView(
@@ -52,30 +62,21 @@ class _FormCadastroViewState extends State<FormCadastroView> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                // const Text('Cadastrar uma conta', style: headerStyle),
-                // SizedBox(height: getHeight(context) * .03),
-                // const Text(
-                //   'Por favor, informe seu dados \npara o cadastro da conta.',
-                //   textAlign: TextAlign.center,
-                // ),
-                builBemVindo(
+                LoginComponentes.builBemVindo(
                   'Cadastrar uma conta',
                   'Por favor, informe seu dados \npara o cadastro da conta.',
                 ),
                 SizedBox(height: getHeight(context) * .05),
                 buildTextFormFieldNome(),
-                SizedBox(height: getHeight(context) * .03),
                 buildTextFormFieldEmail(),
-                SizedBox(height: getHeight(context) * .03),
                 buildTextFormFieldSenha(),
-                SizedBox(height: getHeight(context) * .02),
                 buildTextFormFieldConfirmaSenha(),
                 SizedBox(height: getHeight(context) * .03),
                 buttonCadastrar(context),
-                SizedBox(height: getHeight(context) * .03),
-                buildNaoPossuiConta(possuiConta: false),
                 SizedBox(height: getHeight(context) * .02),
+                LoginComponentes.buidTermos(context)
               ],
             ),
           ),
@@ -118,62 +119,119 @@ class _FormCadastroViewState extends State<FormCadastroView> {
     }
   }
 
-  TextFormField buildTextFormFieldNome() {
-    return TextFormField(
-      decoration: defaultInputDecoration(
-        "Nome",
-        "Digite seu nome",
-        Icons.person_add_alt_outlined,
-      ),
-      controller: _nome,
-      validator: Validatorless.required('Nome é obrigatório'),
-    );
-  }
-
-  TextFormField buildTextFormFieldEmail() {
-    return TextFormField(
-        decoration: defaultInputDecoration(
-          "E-mail",
-          "Digite seu e-mail",
-          Icons.email_outlined,
+  Padding buildTextFormFieldNome() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: TextFormField(
+        decoration: const InputDecoration(
+          labelText: "Nome",
+          hintText: "Digite seu nome",
+          suffixIcon: Icon(Icons.person_add_alt_outlined),
+        ),
+        style: const TextStyle(
+          fontSize: 18,
+          decoration: TextDecoration.none,
         ),
         keyboardType: TextInputType.emailAddress,
         controller: _email,
-        validator: Validatorless.multiple([
-          Validatorless.required('E-mail é obrigatório'),
-          Validatorless.email('Email é inválido'),
-        ]));
+        validator: Validatorless.multiple(
+          [
+            Validatorless.required('E-mail é obrigatório'),
+            Validatorless.email('Email é inválido'),
+          ],
+        ),
+      ),
+    );
   }
 
-  TextFormField buildTextFormFieldSenha() {
-    return TextFormField(
-        decoration: defaultInputDecoration(
-          "Senha",
-          "Digite sua senha",
-          Icons.lock_outlined,
+  Padding buildTextFormFieldEmail() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: TextFormField(
+        decoration: const InputDecoration(
+          labelText: "E-mail",
+          hintText: "digite seu e-mail",
+          suffixIcon: Icon(Icons.email_outlined),
         ),
-        obscureText: true,
+        style: const TextStyle(
+          fontSize: 18,
+          decoration: TextDecoration.none,
+        ),
+        keyboardType: TextInputType.emailAddress,
+        controller: _email,
+        validator: Validatorless.multiple(
+          [
+            Validatorless.required('E-mail é obrigatório'),
+            Validatorless.email('Email é inválido'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Padding buildTextFormFieldSenha() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: TextFormField(
+        keyboardType: TextInputType.text,
         controller: _password,
-        validator: Validatorless.multiple([
-          Validatorless.required('A Senha é obrigatória'),
-          Validatorless.min(4, 'A Senha precida ter no mínimo 4 carateres'),
-        ]));
+        obscureText: !_passwordVisible,
+        decoration: InputDecoration(
+          labelText: 'Senha',
+          hintText: 'Digite sua senha',
+          suffixIcon: IconButton(
+            icon: Icon(
+              _passwordVisible ? Icons.visibility : Icons.visibility_off,
+              color: Theme.of(context).primaryColorDark,
+            ),
+            onPressed: () {
+              setState(() {
+                _passwordVisible = !_passwordVisible;
+              });
+            },
+          ),
+        ),
+        validator: Validatorless.multiple(
+          [
+            Validatorless.required('A Senha é obrigatória'),
+            Validatorless.min(4, 'A Senha precida ter no mínimo 4 carateres'),
+          ],
+        ),
+      ),
+    );
   }
 
-  TextFormField buildTextFormFieldConfirmaSenha() {
-    return TextFormField(
-        decoration: defaultInputDecoration(
-          "Confirmar a senha",
-          "Digite novamente sua senha",
-          Icons.lock_outlined,
-        ),
-        obscureText: true,
+  Padding buildTextFormFieldConfirmaSenha() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: TextFormField(
+        keyboardType: TextInputType.text,
         controller: _confirmaPassword,
-        validator: Validatorless.multiple([
-          Validatorless.required('A confirmação da senha é obrigatória'),
-          Validatorless.min(
-              4, 'A confirmação da senha precida ter no mínimo 4 carateres'),
-          ValidatorsCustom.compare(_password, 'As senhas não conferem')
-        ]));
+        obscureText: !_conformPasswordVisible,
+        decoration: InputDecoration(
+          labelText: 'Confirmar a senha',
+          hintText: 'Digite novamente sua senha',
+          suffixIcon: IconButton(
+            icon: Icon(
+              _conformPasswordVisible ? Icons.visibility : Icons.visibility_off,
+              color: Theme.of(context).primaryColorDark,
+            ),
+            onPressed: () {
+              setState(() {
+                _conformPasswordVisible = !_conformPasswordVisible;
+              });
+            },
+          ),
+        ),
+        validator: Validatorless.multiple(
+          [
+            Validatorless.required('A confirmação da senha é obrigatória'),
+            Validatorless.min(
+                4, 'A confirmação da senha precida ter no mínimo 4 carateres'),
+            ValidatorsCustom.compare(_password, 'As senhas não conferem')
+          ],
+        ),
+      ),
+    );
   }
 }

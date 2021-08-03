@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_loggin_firebase/app/components/default_button.dart';
-import 'package:flutter_loggin_firebase/app/components/nao_possui_conta.dart';
 import 'package:flutter_loggin_firebase/app/shared/size_config.dart';
 import 'package:get/get.dart';
-
-import 'login_success_view.dart';
 
 // ignore: use_key_in_widget_constructors
 class ForgotPasswordView extends StatefulWidget {
@@ -49,16 +46,15 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   buildTextFormFieldEmail(),
                   SizedBox(height: getHeight(context) * 0.1),
                   DefaultButton(
-                    text: 'Acessar',
+                    text: 'Enviar',
                     press: () {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                        Get.to(() => const LoginSuccessView());
-                      }
+                      // if (_formKey.currentState!.validate()) {
+                      //   _formKey.currentState!.save();
+                      //   Get.to(() => const LoginSuccessView());
+                      // }
                     },
                   ),
                   SizedBox(height: getHeight(context) * 0.1),
-                  buildNaoPossuiConta(possuiConta: true)
                 ],
               ),
             ),

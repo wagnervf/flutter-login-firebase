@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_loggin_firebase/app/modules/home/views/home_view.dart';
 import 'package:flutter_loggin_firebase/app/services/handle_erros.dart';
-import 'package:flutter_loggin_firebase/app/services/messages_snackbar.dart';
 
 import 'package:flutter_loggin_firebase/app/modules/login/views/login_view.dart';
 import 'package:flutter_loggin_firebase/app/modules/user/views/user_view.dart';
@@ -11,6 +11,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 class LoginController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  GoogleSignInAccount? currentUserGoogle;
 
   GoogleSignIn googleSignIn = GoogleSignIn();
   Map<String, dynamic> userData = {};
@@ -19,27 +20,35 @@ class LoginController extends GetxController {
   final _logged = false.obs;
   final _loading = false.obs;
 
-  //late User userCreatedFirebase;
-  //Rx<User> _userCreatedFirebase;
-  //get userFirestore => _userCreatedFirebase;
-
   List<User> get userFirebase => _userFirebase;
   bool get userLogged => _logged.value;
   bool get loading => _loading.value;
+
+  @override
+  void onInit() {
+    //  userIsLogged();
+    /*
+    ever(_userFirebase, (_) {
+      userIsLogged();
+    });
+*/
+    super.onInit();
+  }
 
   //
   //Login Google
   //
   void setUserGoogleInFirebase(AuthCredential credential) async {
-    final UserCredential authResult =
-        await _auth.signInWithCredential(credential);
+    try {
+      final UserCredential authResult =
+          await _auth.signInWithCredential(credential);
 
-    final User? user = authResult.user;
+      loginSucess(authResult);
+    } on FirebaseAuthException catch (e) {
+      print(e);
 
-    setUserFirebase(user);
-    setLogged(true);
-
-    Get.to(() => UserView());
+      loginError();
+    }
   }
 
   //
@@ -51,57 +60,78 @@ class LoginController extends GetxController {
   }) async {
     try {
       setLoading(true);
-
       UserCredential userCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: userData["email"],
         password: password,
       );
 
-      setLogged(true);
-      setUserFirebase(userCredential.user!);
+      loginSucess(userCredential);
       await _saveUserInFirebase(userData);
-
-      setLoading(false);
-      //
     } on FirebaseAuthException catch (e) {
       HandleErros.getErroCreateUserFireabse(e);
-      setLoading(false);
-      setLogged(false);
-      //
+      loginError();
     } catch (e) {
-      setLoading(false);
-      setLogged(false);
-      //
+      loginError();
     }
   }
 
   //
   //Login Firebase
   //
-  loginInFirebase({required String email, required String password}) async {
+  Future loginInFirebase(
+      {required String email, required String password}) async {
     try {
       setLoading(true);
+      //  userIsLogged();
       UserCredential result = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      setLogged(true);
-      setUserFirebase(result.user!);
-      setLoading(false);
-
+      loginSucess(result);
       //
     } on FirebaseAuthException catch (error) {
-      setLoading(false);
-      setLogged(false);
+      loginError();
       return HandleErros.getErroLoginFireabse(error);
     } catch (e) {
-      setLoading(false);
-      setLogged(false);
-      print('catch: ${e}');
-      //
+      loginError();
     }
+  }
+
+  Future loginGoogle() async {
+    try {
+      // googleSignIn!.signInSilently();
+      final googleUser = await googleSignIn.signIn();
+      if (googleUser == null) return;
+      currentUserGoogle = googleUser;
+
+      final googleAuth = await googleUser.authentication;
+
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken,
+      );
+
+      setUserGoogleInFirebase(credential);
+      loginSucess(credential);
+    } catch (error) {
+      print(error);
+      print('Não foi possível realizar o login');
+    }
+  }
+
+  void loginSucess(value) {
+    setLogged(true);
+    setUserFirebase(value.user!);
+    setLoading(false);
+    Get.to(() => HomeView());
+  }
+
+  void loginError() {
+    setLoading(false);
+    setLogged(false);
+    clearUser();
   }
 
   Future _saveUserInFirebase(Map<String, dynamic> userData) async {
@@ -114,8 +144,10 @@ class LoginController extends GetxController {
   }
 
   void setUserFirebase(user) {
-    _userFirebase.add(user);
-    _userFirebase.refresh();
+    if (user != null) {
+      _userFirebase.add(user);
+      _userFirebase.refresh();
+    }
   }
 
   void setLogged(bool value) {
@@ -124,12 +156,17 @@ class LoginController extends GetxController {
   }
 
   void setLogoutAll() async {
-    // await googleSignIn.disconnect();
-    FirebaseAuth.instance.signOut();
+    //
+    await FirebaseAuth.instance.signOut();
+    Get.to(() => LoginView());
     clearUser();
     setLogged(false);
     userData = {};
-    //Get.to(() => LoginView());
+  }
+
+  void logoutGoogle() async {
+    await googleSignIn.disconnect();
+    setLogoutAll();
   }
 
   void clearUser() {

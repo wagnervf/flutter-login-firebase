@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_loggin_firebase/app/components/nao_possui_conta.dart';
+import 'package:flutter_loggin_firebase/app/modules/login/views/login_componentes.dart';
 import 'package:flutter_loggin_firebase/app/shared/size_config.dart';
-import 'package:flutter_loggin_firebase/app/theme.dart';
 import 'package:get/get.dart';
 import '../controllers/login_controller.dart';
-import 'form_login_view.dart';
 
 // ignore: use_key_in_widget_constructors
 class LoginView extends GetView<LoginController> {
@@ -17,31 +15,33 @@ class LoginView extends GetView<LoginController> {
   }
 
   Widget buildBody(BuildContext context) {
-    //  var size = MediaQuery.of(context).size;
-    final loginController = Get.put(LoginController());
-    final logged = loginController.userLogged;
-
     return SafeArea(
       child: Container(
         width: double.infinity,
-        margin: EdgeInsets.zero,
+        margin: const EdgeInsets.all(4.0),
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            logged
-                ? Text(loginController.userFirebase[0].email!)
-                : Text('Não Logado'),
-            const FlutterLogo(size: 130),
-            builBemVindo(
+            FlutterLogo(size: getHeight(context) * .2),
+            SizedBox(height: getHeight(context) * 0.07),
+            LoginComponentes.builBemVindo(
               'Seja Bem Vindo!',
               'Acesse com sua conta ou crie uma nova',
             ),
+            SizedBox(height: getHeight(context) * 0.07),
+            LoginComponentes.buttonLogin(),
+            SizedBox(height: getHeight(context) * 0.01),
+            LoginComponentes.naoPossuiConta(),
             SizedBox(height: getHeight(context) * 0.03),
-            const FormLoginView(),
-            SizedBox(height: getHeight(context) * 0.02),
-            buildNaoPossuiConta(possuiConta: true),
-            SizedBox(height: getHeight(context) * 0.02),
+            const Text('ou acesse com', textAlign: TextAlign.center),
+            SizedBox(height: getHeight(context) * 0.01),
+            LoginComponentes.buttonGoogle(),
+            SizedBox(height: getHeight(context) * 0.03),
+            LoginComponentes.buttonFacebook(),
+            SizedBox(height: getHeight(context) * 0.07),
+            LoginComponentes.buidTermos(context)
           ],
         ),
       ),

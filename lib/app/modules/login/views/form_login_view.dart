@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_loggin_firebase/app/modules/login/controllers/login_controller.dart';
+import 'package:flutter_loggin_firebase/app/modules/login/views/login_componentes.dart';
 import 'package:flutter_loggin_firebase/app/shared/size_config.dart';
 import 'package:flutter_loggin_firebase/app/theme.dart';
 import 'package:get/get.dart';
 import 'package:validatorless/validatorless.dart';
-
-import 'forgot_password_view.dart';
-import 'package:flutter_loggin_firebase/app/theme.dart';
 
 class FormLoginView extends StatefulWidget {
   const FormLoginView({Key? key}) : super(key: key);
@@ -22,6 +20,14 @@ class _FormLoginViewState extends State<FormLoginView> {
   final _email = TextEditingController();
   final _password = TextEditingController();
 
+  bool _passwordVisible = true;
+
+  @override
+  void initState() {
+    _passwordVisible = false;
+    super.initState();
+  }
+
   @override
   void dispose() {
     _email.dispose();
@@ -33,21 +39,55 @@ class _FormLoginViewState extends State<FormLoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          SizedBox(height: getHeight(context) * .03),
-          buildTextFormFieldEmail(),
-          SizedBox(height: getHeight(context) * .02),
-          buildTextFormFieldSenha(),
-          SizedBox(height: getHeight(context) * .01),
-          esqueceuSenha(),
-          SizedBox(height: getHeight(context) * .02),
-          buttonAcessar(context),
-        ],
+    return Scaffold(
+      appBar: AppBar(
+          // title: Text('Acessar'),
+          ),
+      body: SingleChildScrollView(child: buildBody(context)),
+    );
+  }
+
+  Widget buildBody(BuildContext context) {
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.all(10.0),
+        margin: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              const Text(
+                'Informe seu e-mail e senha para acessar',
+                style: titleStyle,
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: getHeight(context) * .08),
+              buildTextFormFieldEmail(),
+              SizedBox(height: getHeight(context) * .02),
+              buildTextFormFieldSenha(),
+              SizedBox(height: getHeight(context) * .01),
+              LoginComponentes.esqueceuSenha(),
+              SizedBox(height: getHeight(context) * .08),
+              buttonAcessar(context),
+              SizedBox(height: getHeight(context) * .02),
+              LoginComponentes.naoPossuiConta(),
+            ],
+          ),
+        ),
       ),
     );
+  }
+
+  _submit(_formKey) {
+    var formValid = _formKey.currentState?.validate() ?? false;
+    if (formValid) {
+      loginController.loginInFirebase(
+        email: _email.text,
+        password: _password.text,
+      );
+    }
   }
 
   SizedBox buttonAcessar(BuildContext context) {
@@ -72,22 +112,12 @@ class _FormLoginViewState extends State<FormLoginView> {
     );
   }
 
-  _submit(_formKey) {
-    var formValid = _formKey.currentState?.validate() ?? false;
-    if (formValid) {
-      loginController.loginInFirebase(
-        email: _email.text,
-        password: _password.text,
-      );
-    }
-  }
-
   TextFormField buildTextFormFieldEmail() {
     return TextFormField(
-      decoration: defaultInputDecoration(
-        "E-mail",
-        "Digite seu e-mail",
-        Icons.email_outlined,
+      decoration: const InputDecoration(
+        labelText: "E-mail",
+        hintText: "digite seu e-mail",
+        suffixIcon: Icon(Icons.email_outlined),
       ),
       style: const TextStyle(
         fontSize: 18,
@@ -106,35 +136,30 @@ class _FormLoginViewState extends State<FormLoginView> {
 
   TextFormField buildTextFormFieldSenha() {
     return TextFormField(
-        decoration: defaultInputDecoration(
-          "Senha",
-          "Digite sua senha",
-          Icons.lock_outlined,
+      keyboardType: TextInputType.text,
+      controller: _password,
+      obscureText: !_passwordVisible,
+      decoration: InputDecoration(
+        labelText: 'Senha',
+        hintText: 'Digite sua senha',
+        suffixIcon: IconButton(
+          icon: Icon(
+            _passwordVisible ? Icons.visibility : Icons.visibility_off,
+            color: Theme.of(context).primaryColorDark,
+          ),
+          onPressed: () {
+            setState(() {
+              _passwordVisible = !_passwordVisible;
+            });
+          },
         ),
-        obscureText: true,
-        controller: _password,
-        validator: Validatorless.multiple([
+      ),
+      validator: Validatorless.multiple(
+        [
           Validatorless.required('A Senha é obrigatória'),
           Validatorless.min(4, 'A Senha precida ter no mínimo 4 carateres'),
-        ]));
-  }
-
-  Row esqueceuSenha() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        const Text(
-          'Esqueceu a senha? ',
-          style: TextStyle(fontSize: 16.0),
-        ),
-        TextButton(
-          onPressed: () => Get.to(() => ForgotPasswordView()),
-          child: Text(
-            'clique aqui',
-            style: stylelLink2(),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

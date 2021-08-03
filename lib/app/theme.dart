@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 ThemeData theme() {
   return ThemeData(
@@ -54,26 +55,20 @@ const headerStyle =
 
 InputDecorationTheme inputDecorationTheme() {
   return InputDecorationTheme(
-      floatingLabelBehavior: FloatingLabelBehavior.always,
-      contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-      enabledBorder: inputBorder(),
-      focusedBorder: inputBorder(),
-      border: inputBorder(),
-      labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-      isDense: false);
-}
-
-UnderlineInputBorder inputBorder() {
-  return const UnderlineInputBorder(
-    borderSide: BorderSide(color: kTextColor),
-  );
-}
-
-OutlineInputBorder buildOutlineInputBorder() {
-  return OutlineInputBorder(
-    borderRadius: BorderRadius.circular(28),
-    borderSide: const BorderSide(color: kTextColor),
-    gapPadding: 10,
+    floatingLabelBehavior: FloatingLabelBehavior.always,
+    contentPadding: const EdgeInsets.symmetric(
+      horizontal: 40.0,
+      vertical: 20.0,
+    ),
+    isDense: true,
+    labelStyle: const TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 22,
+    ),
+    hintStyle: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w200),
+    enabledBorder: buildOutlineInputBorder(),
+    focusedBorder: buildOutlineInputBorder(),
+    border: buildOutlineInputBorder(),
   );
 }
 
@@ -83,6 +78,14 @@ final otpInputDecoration = InputDecoration(
   focusedBorder: outlineInputBorder(),
   enabledBorder: outlineInputBorder(),
 );
+
+OutlineInputBorder buildOutlineInputBorder() {
+  return OutlineInputBorder(
+    borderRadius: BorderRadius.circular(28),
+    borderSide: BorderSide(color: kTextColor),
+    gapPadding: 10,
+  );
+}
 
 OutlineInputBorder outlineInputBorder() {
   return OutlineInputBorder(
@@ -96,20 +99,20 @@ InputDecoration defaultInputDecoration(
   return InputDecoration(
     labelText: label,
     hintText: hint,
+    // isDense: true,
     labelStyle: const TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 22,
-      height: 1.0,
+      //height: 1.0,
     ),
-    //contentPadding: const EdgeInsets.only(top: 80),
-
+    contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
     suffixIcon: Icon(icon),
-    hintStyle: const TextStyle(color: Colors.grey),
+    hintStyle: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w200),
   );
 }
 
 TextStyle stylelLink() {
-  return TextStyle(
+  return const TextStyle(
     fontSize: 18.0,
     color: kPrimaryColor,
     fontWeight: FontWeight.bold,
@@ -117,8 +120,8 @@ TextStyle stylelLink() {
 }
 
 TextStyle stylelLink2() {
-  return TextStyle(
-    fontSize: 16.0,
+  return const TextStyle(
+    fontSize: 14.0,
     color: kPrimaryColor,
     fontWeight: FontWeight.normal,
   );
@@ -155,24 +158,4 @@ Center builLoading() {
       color: Colors.white,
     ),
   ));
-}
-
-Container builBemVindo(String title, String subtitle) {
-  return Container(
-    width: double.infinity,
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: titleStyle,
-        ),
-        Text(
-          subtitle,
-          style: subTitleLightStyle,
-        ),
-      ],
-    ),
-  );
 }

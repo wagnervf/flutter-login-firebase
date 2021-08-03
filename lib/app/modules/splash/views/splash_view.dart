@@ -1,19 +1,88 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_loggin_firebase/app/modules/home/views/home_view.dart';
+import 'package:flutter_loggin_firebase/app/modules/login/controllers/login_controller.dart';
+import 'package:flutter_loggin_firebase/app/modules/login/views/login_view.dart';
 import 'package:flutter_loggin_firebase/app/shared/size_config.dart';
-
 import 'package:get/get.dart';
 
-import '../controllers/splash_controller.dart';
-import 'body_splash.dart';
+class SplashView extends StatefulWidget {
+  SplashView({Key? key}) : super(key: key);
 
-// ignore: use_key_in_widget_constructors
-class SplashView extends GetView<SplashController> {
+  @override
+  _SplashViewState createState() => _SplashViewState();
+}
+
+class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
+  late AnimationController controller;
+  final loginController = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
-    ///
-    SizeConfig().init(context);
+    return Scaffold(
+      body: _body(),
+    );
+  }
 
-    ///
-    return Scaffold(body: BodySplash());
+  var user;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 5), () {
+      return _getUser();
+    });
+
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    )..addListener(() {
+        setState(() {});
+      });
+    controller.repeat(reverse: true);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  void _getUser() async {
+    setState(() {});
+    user = await FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      Get.off(() => HomeView());
+    } else {
+      Get.off(() => LoginView());
+    }
+  }
+
+  Widget _body() {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Center(
+          child: SizedBox(
+            height: getHeight(context) * .5,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                FlutterLogo(size: getHeight(context) * .2),
+                SizedBox(
+                  height: getHeight(context) * .1,
+                  width: getHeight(context) * .1,
+                  child: CircularProgressIndicator(
+                    value: controller.value,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

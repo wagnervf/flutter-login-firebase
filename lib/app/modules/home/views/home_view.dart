@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_loggin_firebase/app/components/buttom_nav_bar.dart';
+import 'package:flutter_loggin_firebase/app/modules/login/controllers/login_controller.dart';
 import 'package:flutter_loggin_firebase/app/shared/enums.dart';
 import 'package:flutter_loggin_firebase/app/shared/size_config.dart';
 import 'package:flutter_loggin_firebase/app/theme.dart';
+import 'package:get/get.dart';
 
 import 'icon_button_custom.dart';
 
 // ignore: use_key_in_widget_constructors
 class HomeView extends StatelessWidget {
+  final loginController = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +39,15 @@ class HomeView extends StatelessWidget {
               ),
               const Center(
                 child: Text("Home Page", style: headerStyle),
-              )
+              ),
+              TextButton(
+                onPressed: () => loginController.setLogoutAll(),
+                child: const Text('Logout'),
+              ),
+              TextButton(
+                onPressed: () => loginController.logoutGoogle(),
+                child: const Text('Google Logout'),
+              ),
             ],
           ),
         ),
