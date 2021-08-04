@@ -150,7 +150,7 @@ ButtonStyle styleElevatedButton() {
   );
 }
 
-Center builLoading() {
+Center showLoading() {
   return Center(
       child: Container(
     margin: const EdgeInsets.all(8.0),

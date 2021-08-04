@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_loggin_firebase/app/modules/home/views/home_view.dart';
 import 'package:flutter_loggin_firebase/app/modules/login/controllers/login_controller.dart';
 import 'package:flutter_loggin_firebase/app/modules/login/views/login_view.dart';
+import 'package:flutter_loggin_firebase/app/modules/user/controllers/user_controller.dart';
 import 'package:flutter_loggin_firebase/app/shared/size_config.dart';
 import 'package:get/get.dart';
 
@@ -23,12 +24,10 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
     );
   }
 
-  var user;
-
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 3), () {
       return _getUser();
     });
 
@@ -48,15 +47,23 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void _getUser() async {
+  void _getUser() {
     setState(() {});
-    user = await FirebaseAuth.instance.currentUser;
+    //var user = FirebaseAuth.instance.currentUser;
 
-    if (user != null) {
-      Get.off(() => HomeView());
-    } else {
-      Get.off(() => LoginView());
-    }
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user != null) {
+        Get.off(() => HomeView());
+      } else {
+        Get.off(() => LoginView());
+      }
+    });
+
+    // if (user != null) {
+    //   Get.off(() => HomeView());
+    // } else {
+    //   Get.off(() => LoginView());
+    // }
   }
 
   Widget _body() {

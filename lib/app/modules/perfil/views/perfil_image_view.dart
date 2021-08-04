@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_loggin_firebase/app/modules/user/controllers/user_controller.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class PerfilImageView extends StatelessWidget {
   const PerfilImageView({
@@ -8,6 +10,8 @@ class PerfilImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userController = Get.put(UserController());
+    final String? url = userController.user.photoURL;
     return SizedBox(
       height: 115,
       width: 115,
@@ -15,8 +19,9 @@ class PerfilImageView extends StatelessWidget {
         clipBehavior: Clip.none,
         fit: StackFit.expand,
         children: [
-          const CircleAvatar(
-            backgroundImage: AssetImage("assets/images/Profile Image.png"),
+          CircleAvatar(
+            backgroundImage: NetworkImage(url ??
+                "https://cdn.pixabay.com/photo/2016/08/31/11/54/user-1633249_960_720.png"),
           ),
           Positioned(
             right: -16,

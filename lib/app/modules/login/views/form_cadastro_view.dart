@@ -89,10 +89,10 @@ class _FormCadastroViewState extends State<FormCadastroView> {
     return SizedBox(
       width: double.infinity,
       height: getHeight(context) * .07,
-      child: ElevatedButton(
+      child: Obx(() => ElevatedButton(
           onPressed: () => _submit(_formKey),
           child: loginController.loading
-              ? builLoading()
+              ? showLoading()
               : Text(
                   'Cadastrar',
                   style: TextStyle(
@@ -100,7 +100,7 @@ class _FormCadastroViewState extends State<FormCadastroView> {
                     color: Colors.white,
                   ),
                 ),
-          style: styleElevatedButton()),
+          style: styleElevatedButton())),
     );
   }
 
@@ -108,7 +108,7 @@ class _FormCadastroViewState extends State<FormCadastroView> {
     var formValid = _formKey.currentState?.validate() ?? false;
     if (formValid) {
       Map<String, dynamic> userData = {
-        "name": _nome.text,
+        "displayName": _nome.text,
         "email": _email.text,
       };
 
@@ -132,12 +132,11 @@ class _FormCadastroViewState extends State<FormCadastroView> {
           fontSize: 18,
           decoration: TextDecoration.none,
         ),
-        keyboardType: TextInputType.emailAddress,
-        controller: _email,
+        keyboardType: TextInputType.text,
+        controller: _nome,
         validator: Validatorless.multiple(
           [
             Validatorless.required('E-mail é obrigatório'),
-            Validatorless.email('Email é inválido'),
           ],
         ),
       ),

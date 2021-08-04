@@ -98,7 +98,7 @@ class _FormLoginViewState extends State<FormLoginView> {
         () => ElevatedButton(
           onPressed: () => _submit(_formKey),
           child: loginController.loading
-              ? builLoading()
+              ? showLoading()
               : Text(
                   'Acessar',
                   style: TextStyle(

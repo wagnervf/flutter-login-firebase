@@ -1,34 +1,58 @@
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class UserModel {
-  late String? id;
-  late String? name;
+  late String? uid;
+  late String? displayName;
   late String? email;
 
+  late bool? emailVerified;
+  late bool? isAnonymous;
+  late String? photoURL;
+  late String? providerId;
+
   UserModel({
-    this.id,
-    this.name,
+    this.uid,
+    this.displayName,
+    this.emailVerified,
+    this.isAnonymous,
+    this.photoURL,
+    this.providerId,
     this.email,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'email': email,
-    };
+  UserModel.fromDocumentCreate({doc, name}) {
+    uid = doc.uid ?? Timestamp.now().millisecondsSinceEpoch;
+    displayName = doc.displayName ?? name;
+    email = doc.email ?? '';
+    emailVerified = doc.emailVerified ?? false;
+    isAnonymous = doc.isAnonymous ?? false;
+    photoURL = doc.photoURL ?? '';
+    providerId = doc.providerData[0].providerId ?? '';
   }
 
-  factory UserModel.fromMap(Map<String, dynamic> map) {
-    return UserModel(
-      id: map['id'],
-      name: map['name'],
-      email: map['email'],
-    );
+  UserModel.fromDocumentSnapshot(doc) {
+    uid = doc["uid"];
+    displayName = doc["displayName"] ?? "";
+    email = doc["email"] ?? '';
+    emailVerified = doc["emailVerified"] ?? false;
+    isAnonymous = doc["isAnonymous"] ?? false;
+    photoURL = doc["photoURL"] ?? '';
+    providerId = doc["providerId"] ?? '';
   }
 
-  String toJson() => json.encode(toMap());
+  UserModel.fromDocumentSnapshotGoogle(GoogleSignInAccount doc) {
+    uid = doc.id;
+    displayName = doc.displayName ?? '';
+    email = doc.email;
+    emailVerified = true;
+    isAnonymous = false;
+    photoURL = doc.photoUrl ?? '';
+    providerId = "Google";
+  }
 
-  factory UserModel.fromJson(String source) =>
-      UserModel.fromMap(json.decode(source));
+  @override
+  String toString() {
+    return 'UserModel(uid: $uid, displayName: $displayName, emailVerified: $emailVerified, isAnonymous: $isAnonymous, photoURL: $photoURL,  email: $email)';
+  }
 }

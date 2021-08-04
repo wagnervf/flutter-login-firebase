@@ -108,31 +108,33 @@ class LoginComponentes {
     return Container(
       padding: EdgeInsets.zero,
       width: double.infinity,
-      child: ElevatedButton.icon(
-        label: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Acessar com o Google',
-              style: TextStyle(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
+      child: Obx(() => ElevatedButton.icon(
+            label: loginController.loading
+                ? showLoading()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Acessar com o Google',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.redAccent,
+              onPrimary: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              minimumSize: const Size(200, 45),
             ),
-          ],
-        ),
-        style: ElevatedButton.styleFrom(
-          primary: Colors.redAccent,
-          onPrimary: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          minimumSize: const Size(200, 45),
-        ),
-        icon: const FaIcon(
-          FontAwesomeIcons.google,
-          color: Colors.white,
-        ),
-        onPressed: () => loginController.loginGoogle(),
-      ),
+            icon: const FaIcon(
+              FontAwesomeIcons.google,
+              color: Colors.white,
+            ),
+            onPressed: () => loginController.loginGoogle(),
+          )),
     );
   }
 

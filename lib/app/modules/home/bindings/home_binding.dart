@@ -1,3 +1,4 @@
+import 'package:flutter_loggin_firebase/app/modules/user/controllers/user_controller.dart';
 import 'package:get/get.dart';
 
 import '../controllers/home_controller.dart';
@@ -8,5 +9,6 @@ class HomeBinding extends Bindings {
     Get.lazyPut<HomeController>(
       () => HomeController(),
     );
+    Get.lazyPut(() => UserController());
   }
 }
