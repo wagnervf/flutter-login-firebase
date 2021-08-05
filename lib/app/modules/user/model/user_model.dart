@@ -48,7 +48,7 @@ class UserModel {
     emailVerified = true;
     isAnonymous = false;
     photoURL = doc.photoUrl ?? '';
-    providerId = "Google";
+    providerId = "google";
   }
 
   @override

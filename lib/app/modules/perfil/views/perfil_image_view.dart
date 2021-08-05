@@ -19,10 +19,14 @@ class PerfilImageView extends StatelessWidget {
         clipBehavior: Clip.none,
         fit: StackFit.expand,
         children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(url ??
-                "https://cdn.pixabay.com/photo/2016/08/31/11/54/user-1633249_960_720.png"),
-          ),
+          url == "" || url == null
+              ? const CircleAvatar(
+                  backgroundImage:
+                      AssetImage("assets/images/Profile Image.png"),
+                )
+              : CircleAvatar(
+                  backgroundImage: NetworkImage(url),
+                ),
           Positioned(
             right: -16,
             bottom: 0,

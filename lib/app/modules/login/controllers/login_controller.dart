@@ -9,6 +9,7 @@ import 'package:flutter_loggin_firebase/app/services/handle_erros.dart';
 
 import 'package:flutter_loggin_firebase/app/modules/login/views/login_view.dart';
 import 'package:flutter_loggin_firebase/app/modules/user/views/user_view.dart';
+import 'package:flutter_loggin_firebase/app/services/messages_snackbar.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -50,24 +51,21 @@ class LoginController extends GetxController {
   }) async {
     try {
       setLoading(true);
-      Future.delayed(const Duration(seconds: 1), () async {
-        UserCredential userCredential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: userData["email"],
-          password: password,
-        );
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: userData["email"],
+        password: password,
+      );
 
-        UserModel _user = UserModel.fromDocumentCreate(
-          doc: userCredential.user,
-          name: userData["displayName"],
-        );
+      UserModel _user = UserModel.fromDocumentCreate(
+        doc: userCredential.user,
+        name: userData["displayName"],
+      );
 
-        if (await _saveUserInCollectionFirebase(_user)) {
-          Get.find<UserController>().user = _user;
-          setLoading(false);
-          loginSucess();
-        }
-      });
+      if (await _saveUserInCollectionFirebase(_user)) {
+        Get.find<UserController>().user = _user;
+        loginSucess();
+      }
     } on FirebaseAuthException catch (e) {
       loginError();
       return HandleErros.getErroCreateUserFireabse(e);
@@ -87,10 +85,9 @@ class LoginController extends GetxController {
         password: password,
       );
 
-      //
       //buscado o usuário que foi salvo no BD
       Get.find<UserController>().user =
-          await _getUsuarioInColletion(result.user!.uid);
+          await _getUserCollection(result.user!.uid);
       loginSucess();
 
       //
@@ -103,56 +100,44 @@ class LoginController extends GetxController {
   }
 
   //Login Google
-  //
   Future loginGoogle() async {
     try {
       setLoading(true);
-      Future.delayed(const Duration(seconds: 1), () async {
-        final currentUserGoogle = await googleSignIn.signIn();
+      final currentUserGoogle = await googleSignIn.signIn();
+      if (currentUserGoogle == null) return;
 
-        if (currentUserGoogle == null) return;
+      final googleAuth = await currentUserGoogle.authentication;
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken,
+      );
 
-        final googleAuth = await currentUserGoogle.authentication;
-        final OAuthCredential credential = GoogleAuthProvider.credential(
-          idToken: googleAuth.idToken,
-          accessToken: googleAuth.accessToken,
-        );
+      UserModel _user = UserModel.fromDocumentSnapshotGoogle(currentUserGoogle);
 
-        UserModel _user =
-            UserModel.fromDocumentSnapshotGoogle(currentUserGoogle);
-
-        if (await _saveUserInCollectionFirebase(_user)) {
-          Get.find<UserController>().user = _user;
-          setLoading(false);
-          loginSucess();
-        }
-
+      if (await _saveUserInCollectionFirebase(_user)) {
+        Get.find<UserController>().user = _user;
         setUserGoogleInFirebase(credential);
         loginSucess();
-      });
+      }
     } catch (error) {
       print(error);
-      print('Não foi possível realizar o login');
+      MessagesSnackbar.show('Não foi possível realizar o login');
     }
   }
 
   //Gravar o usuário do google nos usuários do Firebase
-  //
   void setUserGoogleInFirebase(AuthCredential credential) async {
     try {
-      final UserCredential authResult =
-          await _auth.signInWithCredential(credential);
-
+      await _auth.signInWithCredential(credential);
       loginSucess();
     } on FirebaseAuthException catch (e) {
       print(e);
-
+      MessagesSnackbar.show('Não foi possível salvar o usuário');
       loginError();
     }
   }
 
   // Salva usuário no banco do firebase
-  //
   Future<bool> _saveUserInCollectionFirebase(UserModel userData) async {
     try {
       await firestore.collection("users").doc(userData.uid).set({
@@ -163,17 +148,15 @@ class LoginController extends GetxController {
         "photoURL": userData.photoURL,
         "providerId": userData.providerId,
       });
-
       return true;
     } catch (e) {
-      print(e);
+      MessagesSnackbar.show('Não foi possível salvar o usuário no firebase');
       return false;
     }
   }
 
   //buscar usuário banco do firebase
-  //
-  Future<UserModel> _getUsuarioInColletion(String uid) async {
+  Future<UserModel> _getUserCollection(String uid) async {
     var user;
     try {
       return await firestore.collection("users").doc(uid).get().then((value) {
@@ -183,14 +166,47 @@ class LoginController extends GetxController {
         return user;
       });
     } catch (e) {
-      print(e);
+      MessagesSnackbar.show('Usuário não encontrado');
+      rethrow;
+    }
+  }
+
+  Future resetPasswordFirebase(String email) async {
+    try {
+      setLoading(true);
+      final bool query = await checkIfEmailExist(email);
+      if (query == false) {
+        return MessagesSnackbar.show('E-mail não encontrado');
+      }
+
+      await _auth.sendPasswordResetEmail(email: email);
+      MessagesSnackbar.show(
+          'Um link para a troca da senha foi enviado ao seu e-mail');
+      setLoading(false);
+    } catch (e) {
+      MessagesSnackbar.show('Usuário não encontrado');
+      rethrow;
+    }
+  }
+
+  checkIfEmailExist(String email) async {
+    try {
+      QuerySnapshot query = await firestore
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+      if (query.docs.isEmpty) {
+        return false;
+      }
+      return true;
+    } catch (e) {
+      MessagesSnackbar.show('E-mail não encontrado');
       rethrow;
     }
   }
 
   void loginSucess() {
-    //setLogged(true);
-    //setUserFirebase(value.user!);
+    setLogged(true);
     setLoading(false);
     Get.to(() => HomeView());
   }
@@ -218,17 +234,16 @@ class LoginController extends GetxController {
   }
 
   void setLogoutAll() async {
-    //
     try {
       setLogged(true);
-      await _auth.signOut();
-      Get.find<UserController>().clear();
-      Get.to(() => LoginView());
+      var user = Get.find<UserController>().user.providerId;
+      if (user == "password") await _auth.signOut();
+      if (user == "google") await googleSignIn.disconnect();
       clearUser();
-      setLogged(false);
-      userData = {};
+      loginError();
+      Get.to(() => LoginView());
     } catch (e) {
-      Get.snackbar("Erro signing out", e.toString());
+      MessagesSnackbar.show('Erro ao sair');
     }
   }
 
@@ -238,28 +253,9 @@ class LoginController extends GetxController {
   }
 
   void clearUser() {
+    Get.find<UserController>().clear();
+    userData = {};
     _userFirebase.clear();
     _userFirebase.refresh();
   }
 }
-
-// FirebaseAuth.instance.authStateChanges().listen((user) {
-//   setState(() {
-//     loginController.setUserFirebase(user);
-//   });
-// });
-
-// Future<bool> _saveUserInCollectionFirebase(
-//       Map<String, dynamic> userData) async {
-//     try {
-//       this.userData = userData;
-//       await firestore
-//           .collection("users")
-//           .doc(_userFirebase[0].uid)
-//           .set(userData);
-//       return true;
-//     } catch (e) {
-//       print(e);
-//       return false;
-//     }
-//   }

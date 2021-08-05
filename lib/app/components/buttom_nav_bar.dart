@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_loggin_firebase/app/modules/home/views/home_view.dart';
 import 'package:flutter_loggin_firebase/app/modules/perfil/views/perfil_view.dart';
@@ -38,41 +39,67 @@ class BottomNavBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            IconButton(
-              icon: SvgPicture.asset(
-                "assets/icons/Shop Icon.svg",
-                color: MenuState.home == selectedMenu
-                    ? kPrimaryColor
-                    : inActiveIconColor,
-              ),
-              onPressed: () => Get.to(
-                () => HomeView(),
-              ),
-            ),
-            IconButton(
-              icon: SvgPicture.asset("assets/icons/Heart Icon.svg"),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: SvgPicture.asset("assets/icons/Chat bubble Icon.svg"),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: SvgPicture.asset(
-                "assets/icons/User Icon.svg",
-                color: MenuState.profile == selectedMenu
-                    ? kPrimaryColor
-                    : inActiveIconColor,
-              ),
-              onPressed: () => Get.to(
-                () => PerfilView(),
-              ),
-            ),
+            iconHome(inActiveIconColor),
+            iconCalendar(inActiveIconColor),
+            iconList(inActiveIconColor),
+            iconProfile(inActiveIconColor),
           ],
         ),
       ),
     );
   }
-}
 
-class HomeScreen {}
+  IconButton iconProfile(Color inActiveIconColor) {
+    return IconButton(
+      icon: Icon(
+        CupertinoIcons.person_fill,
+        color: MenuState.profile == selectedMenu
+            ? kPrimaryColor
+            : inActiveIconColor,
+      ),
+      onPressed: () => Get.to(
+        () => PerfilView(),
+      ),
+    );
+  }
+
+  IconButton iconList(Color inActiveIconColor) {
+    return IconButton(
+      icon: Icon(
+        CupertinoIcons.list_bullet,
+        color:
+            MenuState.list == selectedMenu ? kPrimaryColor : inActiveIconColor,
+      ),
+      onPressed: () => Get.to(
+        () => HomeView(),
+      ),
+    );
+  }
+
+  IconButton iconCalendar(Color inActiveIconColor) {
+    return IconButton(
+      icon: Icon(
+        CupertinoIcons.calendar,
+        color: MenuState.calendar == selectedMenu
+            ? kPrimaryColor
+            : inActiveIconColor,
+      ),
+      onPressed: () => Get.to(
+        () => HomeView(),
+      ),
+    );
+  }
+
+  IconButton iconHome(Color inActiveIconColor) {
+    return IconButton(
+      icon: Icon(
+        CupertinoIcons.house_fill,
+        color:
+            MenuState.home == selectedMenu ? kPrimaryColor : inActiveIconColor,
+      ),
+      onPressed: () => Get.to(
+        () => HomeView(),
+      ),
+    );
+  }
+}
