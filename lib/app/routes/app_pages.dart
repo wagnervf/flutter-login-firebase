@@ -1,3 +1,7 @@
+import 'package:get/get.dart';
+
+import 'package:flutter_loggin_firebase/app/modules/event/bindings/event_binding.dart';
+import 'package:flutter_loggin_firebase/app/modules/event/views/event_view.dart';
 import 'package:flutter_loggin_firebase/app/modules/home/bindings/home_binding.dart';
 import 'package:flutter_loggin_firebase/app/modules/home/views/home_view.dart';
 import 'package:flutter_loggin_firebase/app/modules/login/bindings/login_binding.dart';
@@ -8,7 +12,6 @@ import 'package:flutter_loggin_firebase/app/modules/splash/bindings/splash_bindi
 import 'package:flutter_loggin_firebase/app/modules/splash/views/splash_view.dart';
 import 'package:flutter_loggin_firebase/app/modules/user/bindings/user_binding.dart';
 import 'package:flutter_loggin_firebase/app/modules/user/views/user_view.dart';
-import 'package:get/get.dart';
 
 part 'app_routes.dart';
 
@@ -43,6 +46,11 @@ class AppPages {
       name: _Paths.USER,
       page: () => UserView(),
       binding: UserBinding(),
+    ),
+    GetPage(
+      name: _Paths.EVENT,
+      page: () => EventView(),
+      binding: EventBinding(),
     ),
   ];
 }

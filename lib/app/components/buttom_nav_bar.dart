@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_loggin_firebase/app/modules/event/views/event_view.dart';
 import 'package:flutter_loggin_firebase/app/modules/home/views/home_view.dart';
 import 'package:flutter_loggin_firebase/app/modules/perfil/views/perfil_view.dart';
 import 'package:flutter_loggin_firebase/app/shared/enums.dart';
@@ -80,12 +81,11 @@ class BottomNavBar extends StatelessWidget {
     return IconButton(
       icon: Icon(
         CupertinoIcons.calendar,
-        color: MenuState.calendar == selectedMenu
-            ? kPrimaryColor
-            : inActiveIconColor,
+        color:
+            MenuState.event == selectedMenu ? kPrimaryColor : inActiveIconColor,
       ),
       onPressed: () => Get.to(
-        () => HomeView(),
+        () => EventView(),
       ),
     );
   }

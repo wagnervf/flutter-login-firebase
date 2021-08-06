@@ -14,8 +14,6 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //  final String? name = loginController.firebaseUser.displayName;
-
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(

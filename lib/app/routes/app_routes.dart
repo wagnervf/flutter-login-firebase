@@ -14,6 +14,7 @@ abstract class Routes {
   static const PERFIL = _Paths.PERFIL;
   // ignore: constant_identifier_names
   static const USER = _Paths.USER;
+  static const EVENT = _Paths.EVENT;
 }
 
 abstract class _Paths {
@@ -27,4 +28,5 @@ abstract class _Paths {
   static const PERFIL = '/perfil';
   // ignore: constant_identifier_names
   static const USER = '/user';
+  static const EVENT = '/event';
 }
