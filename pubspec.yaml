@@ -26,6 +26,7 @@ dependencies:
   get: ^4.3.0
   flutter_svg: ^0.22.0
   validatorless: ^1.2.0
+  flutter_masked_text2: ^0.9.1
 
   # Google icon
   font_awesome_flutter: ^9.1.0

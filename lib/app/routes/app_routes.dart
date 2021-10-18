@@ -15,6 +15,8 @@ abstract class Routes {
   // ignore: constant_identifier_names
   static const USER = _Paths.USER;
   static const EVENT = _Paths.EVENT;
+  static const DESPESAS = _Paths.DESPESAS;
+  static const RECEITAS = _Paths.RECEITAS;
 }
 
 abstract class _Paths {
@@ -29,4 +31,6 @@ abstract class _Paths {
   // ignore: constant_identifier_names
   static const USER = '/user';
   static const EVENT = '/event';
+  static const DESPESAS = '/despesas';
+  static const RECEITAS = '/receitas';
 }

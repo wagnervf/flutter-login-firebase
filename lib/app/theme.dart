@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 ThemeData theme() {
   return ThemeData(
@@ -8,7 +7,7 @@ ThemeData theme() {
     appBarTheme: appBarTheme(),
     textTheme: textTheme(),
     visualDensity: VisualDensity.adaptivePlatformDensity,
-    inputDecorationTheme: inputDecorationTheme(),
+    //  inputDecorationTheme: inputDecorationTheme(),
   );
 }
 
@@ -66,9 +65,9 @@ InputDecorationTheme inputDecorationTheme() {
       fontSize: 22,
     ),
     hintStyle: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w200),
-    enabledBorder: buildOutlineInputBorder(),
-    focusedBorder: buildOutlineInputBorder(),
-    border: buildOutlineInputBorder(),
+    // enabledBorder: buildOutlineInputBorder(),
+    //focusedBorder: buildOutlineInputBorder(),
+    // border: buildOutlineInputBorder(),
   );
 }
 
