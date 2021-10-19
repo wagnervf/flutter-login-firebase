@@ -35,12 +35,19 @@ class ReceitasView extends GetView<ReceitasController> {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: kColorReceitas,
-      appBar: AppBarCustom(title: 'Receitas', color: kColorReceitas),
+      appBar: AppBarCustom(
+        title: 'Receitas',
+        color: kColorReceitas,
+        voltar: true,
+      ),
       body: SafeArea(
           child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [buildHeaderReceitas(size), buildBodyReceitas(size)],
+          children: [
+            buildHeaderReceitas(size),
+            buildBodyReceitas(size),
+          ],
         ),
       )),
     );

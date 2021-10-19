@@ -5,7 +5,6 @@ import 'package:flutter_loggin_firebase/app/modules/home/views/home_view.dart';
 import 'package:flutter_loggin_firebase/app/modules/perfil/views/perfil_view.dart';
 import 'package:flutter_loggin_firebase/app/shared/enums.dart';
 import 'package:flutter_loggin_firebase/app/theme.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class BottomNavBar extends StatelessWidget {
@@ -30,10 +29,6 @@ class BottomNavBar extends StatelessWidget {
             color: const Color(0xFFDADADA).withOpacity(0.15),
           ),
         ],
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(40),
-          topRight: Radius.circular(40),
-        ),
       ),
       child: SafeArea(
         top: false,
@@ -42,12 +37,50 @@ class BottomNavBar extends StatelessWidget {
           children: [
             iconHome(inActiveIconColor),
             iconCalendar(inActiveIconColor),
+            floatButton(context),
             iconList(inActiveIconColor),
             iconProfile(inActiveIconColor),
           ],
         ),
       ),
     );
+  }
+
+  Container floatButton(BuildContext context) {
+    return Container(
+      //margin: EdgeInsets.only(bottom: 24.0),
+      child: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => _configurandoModalBottomSheet(context),
+      ),
+    );
+  }
+
+  void _configurandoModalBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                    leading: new Icon(Icons.music_note),
+                    title: new Text('Músicas'),
+                    onTap: () => {}),
+                ListTile(
+                  leading: new Icon(Icons.videocam),
+                  title: new Text('Videos'),
+                  onTap: () => {},
+                ),
+                ListTile(
+                  leading: new Icon(Icons.satellite),
+                  title: new Text('Tempo'),
+                  onTap: () => {},
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   IconButton iconProfile(Color inActiveIconColor) {

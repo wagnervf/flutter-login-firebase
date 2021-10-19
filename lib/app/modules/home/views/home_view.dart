@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_loggin_firebase/app/components/app_bar.dart';
 import 'package:flutter_loggin_firebase/app/components/buttom_nav_bar.dart';
 import 'package:flutter_loggin_firebase/app/components/constants.dart';
+import 'package:flutter_loggin_firebase/app/components/decorations.dart';
 import 'package:flutter_loggin_firebase/app/modules/despesas/views/despesas_view.dart';
 import 'package:flutter_loggin_firebase/app/modules/login/controllers/login_controller.dart';
 import 'package:flutter_loggin_firebase/app/modules/receitas/views/receitas_view.dart';
@@ -10,8 +12,6 @@ import 'package:flutter_loggin_firebase/app/shared/size_config.dart';
 import 'package:flutter_loggin_firebase/app/theme.dart';
 import 'package:get/get.dart';
 
-import 'icon_button_custom.dart';
-
 class HomeView extends StatelessWidget {
   final loginController = Get.put(LoginController());
 
@@ -19,60 +19,19 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: kPrimaryColor,
+      appBar: AppBarCustom(
+        title: 'Vanelli Mananger',
+        color: kPrimaryColor,
+        voltar: false,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButtonCustom(
-                      svgSrc: "assets/icons/Cart Icon.svg",
-                      press: () {},
-                    ),
-                    IconButtonCustom(
-                      svgSrc: "assets/icons/Bell.svg",
-                      numOfitem: 3,
-                      press: () {},
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: GetX<UserController>(builder: (_) {
-                  return Column(
-                    children: [
-                      Text(_.user.displayName.toString()),
-                      Text(_.user.email.toString()),
-                    ],
-                  );
-                }),
-              ),
-              logoutFirebase(context),
-              TextButton(
-                onPressed: () => loginController.logoutGoogle(),
-                child: const Text('Google Logout'),
-              ),
-              TextButton(
-                onPressed: () => Get.to(() => DespesasView()),
-                child: const Text('Despesas'),
-              ),
-              TextButton(
-                onPressed: () => Get.to(() => ReceitasView()),
-                child: const Text('Receitas'),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  cardReceita(size),
-                  SizedBox(width: 8.0),
-                  cardDespesa(size)
-                ],
-              )
+              buildHeaderHome(context),
+              buildBodyHome(size, context),
             ],
           ),
         ),
@@ -81,37 +40,207 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Card cardDespesa(Size size) {
+  Container buildHeaderHome(BuildContext context) {
+    return Container(
+      color: kPrimaryColor,
+      //height: getWidth(context) * .03,
+      width: double.infinity,
+      alignment: Alignment.topCenter,
+    );
+  }
+
+  Container buildBodyHome(Size size, BuildContext context) {
+    return Container(
+      decoration: Decorations.boxDecorationCircular(),
+      //height: size.height,
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const SizedBox(height: 4.0),
+          buildBalanco(),
+          const SizedBox(height: 12.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              cardInformation(
+                size: size,
+                icon: Icons.trending_up,
+                title: 'Receitas',
+                valor: "R\$ 2569,39",
+                color: kColorReceitas,
+              ),
+              //const SizedBox(width: 8.0),
+              cardInformation(
+                size: size,
+                icon: Icons.trending_down,
+                title: 'Despesas',
+                valor: "R\$ 1569,39",
+                color: kColorDespesas,
+              ),
+            ],
+          ),
+          const Divider(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              buttonSelectPeriodo(title: 'Hoje', active: true),
+              buttonSelectPeriodo(title: 'Semana', active: false),
+              buttonSelectPeriodo(title: 'Mês', active: false),
+              buttonSelectPeriodo(title: 'Ano', active: false),
+            ],
+          ),
+          const Divider(),
+          Column(
+            children: [
+              buildHeaderListRecentes(),
+              buildBodyListRecentes(),
+              buildBodyListRecentes(),
+              buildBodyListRecentes(),
+              buildBodyListRecentes(),
+            ],
+          ),
+          logoutFirebase(context),
+          testes()
+        ],
+      ),
+    );
+  }
+
+  Container buildBodyListRecentes() {
+    return Container(
+      padding: const EdgeInsets.all(4.0),
+      margin: EdgeInsets.only(bottom: 4.0),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: ListTile(
+        leading: Container(
+          padding: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            color: Colors.purple[50],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(
+            Icons.shopping_basket,
+            color: Colors.purple[600],
+          ),
+        ),
+        title: Text('Festa'),
+        subtitle: Text('Churras no gelra'),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('R\$ 500,00'),
+            Text('10:00 AM'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Row buildHeaderListRecentes() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Eventos Recente',
+          style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+        ),
+        Container(
+          padding: EdgeInsets.zero,
+          margin: EdgeInsets.zero,
+          decoration: BoxDecoration(
+            color: Colors.purple[50],
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: TextButton(
+            onPressed: () {},
+            child: Text(
+              'Ver tudo',
+              style: TextStyle(color: Colors.purple[600]),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Container buttonSelectPeriodo({required String title, required bool active}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      decoration: BoxDecoration(
+        color: active ? Colors.amber[100] : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: TextButton(
+        onPressed: () {},
+        child: Text(
+          title,
+          style: TextStyle(color: active ? Colors.amber[800] : Colors.grey),
+        ),
+      ),
+    );
+  }
+
+  Column buildBalanco() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        TextButton.icon(
+          onPressed: () {},
+          icon: Icon(Icons.arrow_drop_down),
+          label: Text('Abril'),
+        ),
+        Text('Balanço do Mês'),
+        Text(
+          'R\$ 5569,39',
+          style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+  }
+
+  Card cardInformation({
+    required Size size,
+    required IconData icon,
+    required String title,
+    required String valor,
+    required Color color,
+  }) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
       ),
       child: Container(
+        width: size.width * .43,
+        height: size.height * .1,
         decoration: BoxDecoration(
-          color: kColorDespesas,
+          color: color,
           borderRadius: BorderRadius.circular(30),
         ),
-        width: size.width * .45,
-        height: size.height * .1,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Icon(
-              Icons.trending_down,
+              icon,
               color: Colors.white,
               size: 32.0,
             ),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  "Despesas",
+                Text(
+                  title,
                   style: TextStyle(color: Colors.white),
                 ),
-                const Text(
-                  "R\$ 2569,39",
-                  style: TextStyle(color: Colors.white),
+                Text(
+                  valor,
+                  style: TextStyle(color: Colors.white, fontSize: 20.0),
                 ),
               ],
             ),
@@ -121,43 +250,33 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Card cardReceita(Size size) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Container(
-        width: size.width * .45,
-        height: size.height * .1,
-        decoration: BoxDecoration(
-          color: kColorReceitas,
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Icon(
-              Icons.trending_up,
-              color: Colors.white,
-              size: 32.0,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+  Column testes() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: GetX<UserController>(builder: (_) {
+            return Column(
               children: [
-                const Text(
-                  "Receitas",
-                  style: TextStyle(color: Colors.white),
-                ),
-                const Text(
-                  "R\$ 2569,39",
-                  style: TextStyle(color: Colors.white, fontSize: 20.0),
-                ),
+                Text(_.user.displayName.toString()),
+                Text(_.user.email.toString()),
               ],
-            ),
-          ],
+            );
+          }),
         ),
-      ),
+        TextButton(
+          onPressed: () => loginController.logoutGoogle(),
+          child: const Text('Google Logout'),
+        ),
+        TextButton(
+          onPressed: () => Get.to(() => DespesasView()),
+          child: const Text('Despesas'),
+        ),
+        TextButton(
+          onPressed: () => Get.to(() => ReceitasView()),
+          child: const Text('Receitas'),
+        ),
+      ],
     );
   }
 

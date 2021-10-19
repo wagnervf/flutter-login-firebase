@@ -26,7 +26,11 @@ class DespesasView extends GetView<DespesasController> {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: kColorDespesas,
-      appBar: AppBarCustom(title: 'Despesas', color: kColorDespesas),
+      appBar: AppBarCustom(
+        title: 'Despesas',
+        color: kColorDespesas,
+        voltar: true,
+      ),
       body: SafeArea(
           child: SingleChildScrollView(
         child: Column(

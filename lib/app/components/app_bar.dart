@@ -5,10 +5,15 @@ class AppBarCustom extends StatelessWidget with PreferredSizeWidget {
   final double height;
   final String title;
   final Color color;
+  final bool voltar;
 
-  AppBarCustom(
-      {Key? key, this.height = 50, required this.title, required this.color})
-      : super(key: key);
+  AppBarCustom({
+    Key? key,
+    this.height = 50,
+    required this.title,
+    required this.color,
+    required this.voltar,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +26,15 @@ class AppBarCustom extends StatelessWidget with PreferredSizeWidget {
         style: TextStyle(color: color != null ? Colors.white : color),
       ),
       centerTitle: true,
-      leading: IconButton(
-        icon: Icon(
-          Icons.arrow_back,
-          color: Colors.white,
+      leading: Visibility(
+        visible: voltar,
+        child: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () => Get.back(),
         ),
-        onPressed: () => Get.back(),
       ),
       actions: <Widget>[
         // IconButton(
