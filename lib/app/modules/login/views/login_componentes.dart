@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_loggin_firebase/app/modules/login/controllers/login_controller.dart';
 import 'package:flutter_loggin_firebase/app/modules/login/views/forgot_password_view.dart';
 import 'package:flutter_loggin_firebase/app/modules/login/views/form_cadastro_view.dart';
-import 'package:flutter_loggin_firebase/app/modules/login/views/form_login_view.dart';
+import 'package:flutter_loggin_firebase/app/modules/login/views/login_view.dart';
 import 'package:flutter_loggin_firebase/app/theme.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -98,7 +98,7 @@ class LoginComponentes {
           FontAwesomeIcons.envelope,
           color: kTextColor,
         ),
-        onPressed: () => {Get.to(() => FormLoginView())},
+        onPressed: () => {Get.to(() => LoginView())},
       ),
     );
   }
@@ -138,56 +138,54 @@ class LoginComponentes {
     );
   }
 
-  static Container buttonFacebook() {
-    return Container(
-      padding: EdgeInsets.zero,
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        label: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Acessar com o Facebook',
-              style: TextStyle(fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-        style: ElevatedButton.styleFrom(
-          primary: const Color(0xFF1877f2),
-          onPrimary: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          minimumSize: const Size(200, 45),
-        ),
-        icon: const FaIcon(
-          FontAwesomeIcons.facebookF,
-          color: Colors.white,
-        ),
-        onPressed: () => {},
-      ),
-    );
-  }
+  // static Container buttonFacebook() {
+  //   return Container(
+  //     padding: EdgeInsets.zero,
+  //     width: double.infinity,
+  //     child: ElevatedButton.icon(
+  //       label: Row(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: [
+  //           const Text(
+  //             'Acessar com o Facebook',
+  //             style: TextStyle(fontWeight: FontWeight.bold),
+  //             textAlign: TextAlign.center,
+  //           ),
+  //         ],
+  //       ),
+  //       style: ElevatedButton.styleFrom(
+  //         primary: const Color(0xFF1877f2),
+  //         onPrimary: Colors.white,
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(20),
+  //         ),
+  //         minimumSize: const Size(200, 45),
+  //       ),
+  //       icon: const FaIcon(
+  //         FontAwesomeIcons.facebookF,
+  //         color: Colors.white,
+  //       ),
+  //       onPressed: () => {},
+  //     ),
+  //   );
+  // }
 
-  static Container builBemVindo(
+  static Column builBemVindo(
     String title,
     String subtitle,
   ) {
-    return Container(
-      width: double.infinity,
-      child: Column(
-        children: [
-          Text(
-            title,
-            style: titleStyle,
-          ),
-          Text(
-            subtitle,
-            style: subTitleLightStyle,
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: titleStyle,
+        ),
+        Text(
+          subtitle,
+          style: subTitleLightStyle,
+        ),
+      ],
     );
   }
 }
