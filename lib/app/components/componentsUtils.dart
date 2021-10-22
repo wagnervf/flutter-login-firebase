@@ -64,4 +64,50 @@ class Componentsutils {
       filled: true,
     );
   }
+
+  static Card cardInformation({
+    required Size size,
+    required IconData icon,
+    required String title,
+    required String valor,
+    required Color color,
+  }) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Container(
+        width: size.width * .43,
+        height: size.height * .1,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+              size: 32.0,
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(color: Colors.white),
+                ),
+                Text(
+                  valor,
+                  style: TextStyle(color: Colors.white, fontSize: 20.0),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

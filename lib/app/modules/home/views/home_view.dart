@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_loggin_firebase/app/components/app_bar.dart';
 import 'package:flutter_loggin_firebase/app/components/buttom_nav_bar.dart';
+import 'package:flutter_loggin_firebase/app/components/componentsUtils.dart';
 import 'package:flutter_loggin_firebase/app/components/constants.dart';
 import 'package:flutter_loggin_firebase/app/components/decorations.dart';
 import 'package:flutter_loggin_firebase/app/modules/despesas/views/despesas_view.dart';
@@ -64,7 +65,7 @@ class HomeView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              cardInformation(
+              Componentsutils.cardInformation(
                 size: size,
                 icon: Icons.trending_up,
                 title: 'Receitas',
@@ -72,7 +73,7 @@ class HomeView extends StatelessWidget {
                 color: kColorReceitas,
               ),
               //const SizedBox(width: 8.0),
-              cardInformation(
+              Componentsutils.cardInformation(
                 size: size,
                 icon: Icons.trending_down,
                 title: 'Despesas',
@@ -201,52 +202,6 @@ class HomeView extends StatelessWidget {
           style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
         ),
       ],
-    );
-  }
-
-  Card cardInformation({
-    required Size size,
-    required IconData icon,
-    required String title,
-    required String valor,
-    required Color color,
-  }) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Container(
-        width: size.width * .43,
-        height: size.height * .1,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Icon(
-              icon,
-              color: Colors.white,
-              size: 32.0,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(color: Colors.white),
-                ),
-                Text(
-                  valor,
-                  style: TextStyle(color: Colors.white, fontSize: 20.0),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 

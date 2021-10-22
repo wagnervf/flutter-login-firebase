@@ -1,11 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_loggin_firebase/app/modules/despesas/views/despesas_view.dart';
 import 'package:flutter_loggin_firebase/app/modules/event/views/event_view.dart';
 import 'package:flutter_loggin_firebase/app/modules/home/views/home_view.dart';
 import 'package:flutter_loggin_firebase/app/modules/perfil/views/perfil_view.dart';
+import 'package:flutter_loggin_firebase/app/modules/receitas/views/receitas_view.dart';
 import 'package:flutter_loggin_firebase/app/shared/enums.dart';
+import 'package:flutter_loggin_firebase/app/shared/size_config.dart';
 import 'package:flutter_loggin_firebase/app/theme.dart';
 import 'package:get/get.dart';
+
+import 'componentsUtils.dart';
+import 'constants.dart';
 
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({
@@ -18,6 +24,7 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const Color inActiveIconColor = Color(0xFFB6B6B6);
+    final size = MediaQuery.of(context).size;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14),
       decoration: BoxDecoration(
@@ -37,7 +44,7 @@ class BottomNavBar extends StatelessWidget {
           children: [
             iconHome(inActiveIconColor),
             iconCalendar(inActiveIconColor),
-            floatButton(context),
+            floatButton(size, context),
             iconList(inActiveIconColor),
             iconProfile(inActiveIconColor),
           ],
@@ -46,41 +53,100 @@ class BottomNavBar extends StatelessWidget {
     );
   }
 
-  Container floatButton(BuildContext context) {
-    return Container(
-      //margin: EdgeInsets.only(bottom: 24.0),
-      child: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => _configurandoModalBottomSheet(context),
-      ),
+  FloatingActionButton floatButton(Size size, BuildContext context) {
+    return FloatingActionButton(
+      child: const Icon(Icons.add),
+      onPressed: () => _configurandoModalBottomSheet(size, context),
     );
   }
 
-  void _configurandoModalBottomSheet(context) {
+  void _configurandoModalBottomSheet(Size size, context) {
     showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(120),
+            topRight: Radius.circular(120),
+          ),
+        ),
         context: context,
         builder: (BuildContext bc) {
           return Container(
-            child: Wrap(
-              children: <Widget>[
-                ListTile(
-                    leading: new Icon(Icons.music_note),
-                    title: new Text('Músicas'),
-                    onTap: () => {}),
-                ListTile(
-                  leading: new Icon(Icons.videocam),
-                  title: new Text('Videos'),
-                  onTap: () => {},
-                ),
-                ListTile(
-                  leading: new Icon(Icons.satellite),
-                  title: new Text('Tempo'),
-                  onTap: () => {},
-                ),
-              ],
+            height: size.height * .25,
+            padding: const EdgeInsets.all(12.0),
+            child: Center(
+              child: Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 8.0,
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.only(top: 24.0),
+                    child: buttonsModal(
+                      text: 'Evento',
+                      color: kPrimaryColor,
+                      icon: Icons.event,
+                      page: '/event',
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 44),
+                    child: buttonsModal(
+                      text: 'Receita',
+                      color: kColorReceitas,
+                      icon: Icons.trending_up,
+                      page: '/receitas',
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 24.0),
+                    child: buttonsModal(
+                      text: 'Despesa',
+                      color: kColorDespesas,
+                      icon: Icons.trending_down,
+                      page: '/despesas',
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         });
+  }
+
+  ElevatedButton buttonsModal(
+      {required Color color,
+      required IconData icon,
+      required String text,
+      required String page}) {
+    return ElevatedButton(
+      onPressed: () => Get.toNamed(page),
+      child: Column(
+        children: [
+          Icon(
+            icon,
+            color: Colors.white,
+            size: 25.0,
+          ),
+          Text(
+            text,
+            textAlign: TextAlign.start,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20.0,
+            ),
+          ),
+        ],
+      ),
+      style: ElevatedButton.styleFrom(
+        elevation: 4.0,
+        primary: color,
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(18.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(60),
+        ),
+      ),
+    );
   }
 
   IconButton iconProfile(Color inActiveIconColor) {
@@ -91,9 +157,7 @@ class BottomNavBar extends StatelessWidget {
             ? kPrimaryColor
             : inActiveIconColor,
       ),
-      onPressed: () => Get.to(
-        () => PerfilView(),
-      ),
+      onPressed: () => Get.to(() => PerfilView()),
     );
   }
 
