@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_loggin_firebase/app/components/header_widget.dart';
 import 'package:flutter_loggin_firebase/app/modules/login/controllers/login_controller.dart';
 import 'package:flutter_loggin_firebase/app/modules/login/views/login_componentes.dart';
 import 'package:flutter_loggin_firebase/app/shared/size_config.dart';
@@ -42,40 +43,44 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(4.0),
-            margin: const EdgeInsets.symmetric(horizontal: 18.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  FlutterLogo(size: getHeight(context) * .1),
-                  LoginComponentes.builBemVindo(
-                    'Seja Bem Vindo!',
-                    'Informe seu usuário e senha.',
+          child: Column(
+            children: [
+              HeaderWidget(
+                getHeight(context),
+                false,
+                Icons.login_rounded,
+              ), //let's create a common header widget
+
+              Container(
+                height: getHeight(context) - 130,
+                width: double.infinity,
+                padding: const EdgeInsets.all(4.0),
+                margin: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      FlutterLogo(size: getHeight(context) * .1),
+                      LoginComponentes.builBemVindo(
+                        'Seja Bem Vindo!',
+                        'Informe seu usuário e senha.',
+                      ),
+                      SizedBox(height: getHeight(context) * 0.02),
+                      buildTextFormFieldEmail(),
+                      buildTextFormFieldSenha(),
+                      LoginComponentes.esqueceuSenha(),
+                      buttonAcessar(context),
+                      LoginComponentes.naoPossuiConta(),
+                      const Text('- ou -'),
+                      LoginComponentes.buttonGoogle(),
+                      LoginComponentes.buidTermos(context)
+                    ],
                   ),
-                  SizedBox(height: getHeight(context) * 0.1),
-                  buildTextFormFieldEmail(),
-                  buildTextFormFieldSenha(),
-                  LoginComponentes.esqueceuSenha(),
-                  buttonAcessar(context),
-                  Divider(
-                    height: getHeight(context) * 0.05,
-                  ),
-                  SizedBox(height: getHeight(context) * 0.08),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: const Text('ou acesse com'),
-                  ),
-                  LoginComponentes.buttonGoogle(),
-                  LoginComponentes.naoPossuiConta(),
-                  LoginComponentes.buidTermos(context)
-                ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),
@@ -95,20 +100,27 @@ class _LoginViewState extends State<LoginView> {
   SizedBox buttonAcessar(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: getHeight(context) * .07,
+      height: getHeight(context) * .06,
       child: Obx(
-        () => ElevatedButton(
+        () => OutlinedButton(
           onPressed: () => _submit(_formKey),
           child: loginController.loading
               ? showLoading()
               : Text(
-                  'Acessar',
+                  'Entrar',
                   style: TextStyle(
                     fontSize: getHeight(context) * .03,
-                    color: Colors.white,
+                    color: kPrimaryColor,
                   ),
                 ),
-          style: styleElevatedButton(),
+          style: OutlinedButton.styleFrom(
+            backgroundColor: Colors.white,
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25),
+            ),
+            side: const BorderSide(color: kPrimaryColor),
+          ),
         ),
       ),
     );
@@ -116,16 +128,10 @@ class _LoginViewState extends State<LoginView> {
 
   TextFormField buildTextFormFieldEmail() {
     return TextFormField(
-      decoration: const InputDecoration(
-        prefixIcon: Icon(Icons.email_outlined),
-        labelText: "E-mail",
-        hintText: "digite seu e-mail",
-        // suffixIcon: Icon(Icons.email_outlined),
-      ),
-      style: const TextStyle(
-        fontSize: 18,
-        decoration: TextDecoration.none,
-      ),
+      decoration: inputDecorationTextForm(
+          label: "E-mail",
+          hint: "digite seu e-mail",
+          icon: Icons.email_outlined),
       keyboardType: TextInputType.emailAddress,
       controller: _email,
       validator: Validatorless.multiple(
@@ -133,6 +139,24 @@ class _LoginViewState extends State<LoginView> {
           Validatorless.required('E-mail é obrigatório'),
           Validatorless.email('Email é inválido'),
         ],
+      ),
+      style: const TextStyle(
+        fontSize: 18,
+        decoration: TextDecoration.none,
+      ),
+    );
+  }
+
+  InputDecoration inputDecorationTextForm(
+      {required String label, required String hint, required IconData icon}) {
+    return InputDecoration(
+      prefixIcon: Icon(icon),
+      labelText: label,
+      hintText: hint,
+      fillColor: Colors.white,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(25.0),
+        borderSide: BorderSide(),
       ),
     );
   }
@@ -143,7 +167,7 @@ class _LoginViewState extends State<LoginView> {
       controller: _password,
       obscureText: !_passwordVisible,
       decoration: InputDecoration(
-        prefixIcon: Icon(Icons.lock_outline),
+        prefixIcon: const Icon(Icons.lock_outline),
         labelText: 'Senha',
         hintText: 'Digite sua senha',
         suffixIcon: IconButton(
@@ -156,6 +180,11 @@ class _LoginViewState extends State<LoginView> {
               _passwordVisible = !_passwordVisible;
             });
           },
+        ),
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25.0),
+          borderSide: BorderSide(),
         ),
       ),
       validator: Validatorless.multiple(

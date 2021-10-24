@@ -53,18 +53,18 @@ const headerStyle =
     TextStyle(fontSize: 24, color: Colors.black, fontWeight: FontWeight.bold);
 
 InputDecorationTheme inputDecorationTheme() {
-  return InputDecorationTheme(
+  return const InputDecorationTheme(
     floatingLabelBehavior: FloatingLabelBehavior.always,
-    contentPadding: const EdgeInsets.symmetric(
+    contentPadding: EdgeInsets.symmetric(
       horizontal: 40.0,
       vertical: 20.0,
     ),
     isDense: true,
-    labelStyle: const TextStyle(
+    labelStyle: TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 22,
     ),
-    hintStyle: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w200),
+    hintStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.w200),
     // enabledBorder: buildOutlineInputBorder(),
     //focusedBorder: buildOutlineInputBorder(),
     // border: buildOutlineInputBorder(),
@@ -144,7 +144,7 @@ ButtonStyle styleElevatedButton() {
   return ElevatedButton.styleFrom(
     primary: kPrimaryColor,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(25),
     ),
   );
 }

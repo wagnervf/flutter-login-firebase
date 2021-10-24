@@ -16,7 +16,7 @@ class LoginComponentes {
       children: [
         const Text(
           'Esqueceu a senha? ',
-          style: TextStyle(fontSize: 14.0),
+          style: TextStyle(fontSize: 12.0),
         ),
         TextButton(
           onPressed: () => Get.to(() => ForgotPasswordView()),
@@ -33,14 +33,14 @@ class LoginComponentes {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text(
-          'Não possui conta? ',
-          style: TextStyle(fontSize: 16.0),
-        ),
+        // const Text(
+        //   'Não possui conta? ',
+        //   style: TextStyle(fontSize: 16.0),
+        // ),
         TextButton(
           onPressed: () => Get.to(() => const FormCadastroView()),
           child: Text(
-            'Clique aqui',
+            'Criar Conta',
             style: stylelLink(),
           ),
         ),
@@ -50,6 +50,7 @@ class LoginComponentes {
 
   static Container buidTermos(BuildContext context) {
     return Container(
+      padding: EdgeInsets.zero,
       child: Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
