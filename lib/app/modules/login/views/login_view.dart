@@ -52,7 +52,7 @@ class _LoginViewState extends State<LoginView> {
               ), //let's create a common header widget
 
               Container(
-                height: getHeight(context) - 130,
+                height: getHeight(context) - 120,
                 width: double.infinity,
                 padding: const EdgeInsets.all(4.0),
                 margin: const EdgeInsets.symmetric(horizontal: 24.0),

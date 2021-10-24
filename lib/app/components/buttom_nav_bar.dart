@@ -10,7 +10,7 @@ import 'package:flutter_loggin_firebase/app/shared/size_config.dart';
 import 'package:flutter_loggin_firebase/app/theme.dart';
 import 'package:get/get.dart';
 
-import 'componentsUtils.dart';
+import 'components_utils.dart';
 import 'constants.dart';
 
 class BottomNavBar extends StatelessWidget {
@@ -68,6 +68,7 @@ class BottomNavBar extends StatelessWidget {
             topRight: Radius.circular(120),
           ),
         ),
+        backgroundColor: Colors.transparent,
         context: context,
         builder: (BuildContext bc) {
           return Container(
@@ -143,7 +144,7 @@ class BottomNavBar extends StatelessWidget {
         alignment: Alignment.center,
         padding: const EdgeInsets.all(18.0),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(60),
+          borderRadius: BorderRadius.circular(80),
         ),
       ),
     );

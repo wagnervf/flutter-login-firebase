@@ -18,7 +18,6 @@ class ListReceitas extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return ListTile(
-      //contentPadding: EdgeInsets.zero,
       leading: const Icon(Icons.turned_in_not_outlined),
       title: Text(
         'Categoria',
@@ -26,7 +25,6 @@ class ListReceitas extends StatelessWidget {
       ),
       trailing: const Icon(Icons.keyboard_arrow_right),
       onTap: () => _openDialogBottom(size),
-      // selected: true,
     );
   }
 
@@ -46,6 +44,7 @@ class ListReceitas extends StatelessWidget {
                 subtitle: Text(subtitles[index]),
                 leading: Icon(icons[index]),
                 onTap: () {
+                  print(titles[index]);
                   Get.back();
                 },
                 hoverColor: Colors.amber,

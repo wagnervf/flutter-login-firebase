@@ -22,8 +22,8 @@ class Componentsutils {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
+          const Padding(
+            padding: EdgeInsets.only(left: 8.0),
             child: Text(
               "Valor",
               style: TextStyle(color: Colors.white),
